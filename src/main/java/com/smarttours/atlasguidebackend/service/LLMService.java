@@ -6,25 +6,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarttours.atlasguidebackend.user.input.Pace;
 import com.smarttours.atlasguidebackend.user.input.TourGuidePersona;
 import com.smarttours.atlasguidebackend.user.output.ItineraryPlan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LLMService {
 
-    private ChatClient chatClient;
+    private static final Logger logger = LoggerFactory.getLogger(LLMService.class);
+    private final ChatClient chatClient;
 
-    LLMService(@Qualifier("gemma3ChatClient") ChatClient chatClient) {
-        this.chatClient = chatClient;
+    LLMService(ChatClient.Builder builder) {
+        this.chatClient = builder.build();
     }
 
     ItineraryPlan getItinerary(String systemPrompt, String userPrompt) {
-        return chatClient.prompt()
-                .system(systemPrompt)
-                .user(userPrompt)
-                .call()
-                .entity(ItineraryPlan.class);
+        try {
+            return chatClient.prompt()
+                    //.advisors(new SimpleLoggerAdvisor())
+                    .system(systemPrompt)
+                    .user(userPrompt)
+                    .call()
+                    .entity(ItineraryPlan.class);
+        } catch (Exception e) {
+            // Log the exception (you can use a logging framework here)
+            logger.error("Error calling LLM: " + e.getMessage(), e);
+
+        }
+        return null;
     }
 
     private Pace infereOptionalPace(Pace pace) {

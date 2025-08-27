@@ -19,7 +19,7 @@ public class SmartToursGuideApp {
 		SpringApplication.run(SmartToursGuideApp.class, args);
 	}
 
-	@Bean
+/*	@Bean
 	public ChatClient gemma3ChatClient(ChatClient.Builder chatClientBuilder) {
 		return chatClientBuilder
 				.defaultOptions(ChatOptions.builder()
@@ -44,6 +44,6 @@ public class SmartToursGuideApp {
 				.findAndRegisterModules()
 				.setDefaultPropertyInclusion(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
 				.setDateFormat(dateFormat);
-	}
+	}*/
 
 }
