@@ -41,7 +41,7 @@ public class TourGuideApiTest {
     void whenValidInput_thenReturns200() throws Exception {
         Map<String, Object> validInput = new HashMap<>();
         validInput.put("destination", "Paris, France");
-        validInput.put("startDate", "15/09/2025");
+        validInput.put("startDate", "2025-09-15");
         validInput.put("tripDuration", 5);
         // Optional fields are not required for a valid request
 
@@ -60,7 +60,7 @@ public class TourGuideApiTest {
     void whenMissingDestination_thenReturns400() throws Exception {
         Map<String, Object> invalidInput = new HashMap<>();
         // Destination is missing
-        invalidInput.put("startDate", "15/09/2025");
+        invalidInput.put("startDate", "2025-09-15");
         invalidInput.put("tripDuration", 5);
 
         mockMvc.perform(post("/api/v1/itinerary")
