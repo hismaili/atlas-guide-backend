@@ -3,13 +3,16 @@ package com.smarttours.atlasguidebackend.exposition;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarttours.atlasguidebackend.service.ItineraryService;
+import com.smarttours.atlasguidebackend.service.LLMService;
 import com.smarttours.atlasguidebackend.user.input.ItineraryRequest;
 import org.junit.jupiter.api.Test;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
@@ -18,14 +21,14 @@ import java.util.Map;
 import static org.hamcrest.Matchers.isA;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles({"ollama","test"})
 public class TourGuideApiTest {
 
     @Autowired
@@ -34,11 +37,17 @@ public class TourGuideApiTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @SpyBean
+    @MockitoBean
     private ItineraryService itineraryService;
+
+    @MockitoBean
+    private LLMService llmService;
 
     @Test
     void whenValidInput_thenReturns200() throws Exception {
+
+        doNothing().when(itineraryService).createItineraryAsync(any(ItineraryRequest.class), anyString());
+
         Map<String, Object> validInput = new HashMap<>();
         validInput.put("destination", "Paris, France");
         validInput.put("startDate", "2025-09-15");
