@@ -1,10 +1,10 @@
-package com.smarttours.atlasguidebackend.service;
+package com.smarttours.atlasguidebackend.domain.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smarttours.atlasguidebackend.user.input.ItineraryRequest;
-import com.smarttours.atlasguidebackend.user.output.ItineraryPlan;
+import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
+import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import com.smarttours.atlasguidebackend.utils.UserPromptBuilder;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

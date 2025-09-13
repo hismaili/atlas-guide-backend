@@ -1,7 +1,7 @@
-package com.smarttours.atlasguidebackend.service;
+package com.smarttours.atlasguidebackend.domain.service;
 
 
-import com.smarttours.atlasguidebackend.user.output.ItineraryPlan;
+import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

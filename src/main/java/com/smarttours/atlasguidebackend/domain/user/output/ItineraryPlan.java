@@ -1,4 +1,4 @@
-package com.smarttours.atlasguidebackend.user.output;
+package com.smarttours.atlasguidebackend.domain.user.output;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

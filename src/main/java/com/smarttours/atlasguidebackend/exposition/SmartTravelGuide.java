@@ -1,9 +1,9 @@
 package com.smarttours.atlasguidebackend.exposition;
 
-import com.smarttours.atlasguidebackend.service.ItineraryService;
-import com.smarttours.atlasguidebackend.service.SseService;
-import com.smarttours.atlasguidebackend.user.input.ItineraryRequest;
-import com.smarttours.atlasguidebackend.user.output.ItineraryPlan;
+import com.smarttours.atlasguidebackend.domain.service.ItineraryService;
+import com.smarttours.atlasguidebackend.domain.service.SseService;
+import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
+import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

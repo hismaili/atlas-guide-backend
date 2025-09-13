@@ -2,11 +2,10 @@ package com.smarttours.atlasguidebackend.exposition;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smarttours.atlasguidebackend.service.ItineraryService;
-import com.smarttours.atlasguidebackend.service.LLMService;
-import com.smarttours.atlasguidebackend.user.input.ItineraryRequest;
+import com.smarttours.atlasguidebackend.domain.service.ItineraryService;
+import com.smarttours.atlasguidebackend.domain.service.LLMService;
+import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
 import org.junit.jupiter.api.Test;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

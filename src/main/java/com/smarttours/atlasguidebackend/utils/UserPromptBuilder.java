@@ -1,8 +1,8 @@
 package com.smarttours.atlasguidebackend.utils;
 
 
-import com.smarttours.atlasguidebackend.user.input.ItineraryRequest;
-import com.smarttours.atlasguidebackend.user.input.TourGuidePersona;
+import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
+import com.smarttours.atlasguidebackend.domain.user.input.TourGuidePersona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

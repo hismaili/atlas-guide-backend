@@ -1,4 +1,4 @@
-package com.smarttours.atlasguidebackend.user.input;
+package com.smarttours.atlasguidebackend.domain.user.input;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

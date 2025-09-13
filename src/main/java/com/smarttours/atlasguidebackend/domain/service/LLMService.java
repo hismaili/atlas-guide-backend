@@ -1,16 +1,14 @@
-package com.smarttours.atlasguidebackend.service;
+package com.smarttours.atlasguidebackend.domain.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smarttours.atlasguidebackend.user.input.Pace;
-import com.smarttours.atlasguidebackend.user.input.TourGuidePersona;
-import com.smarttours.atlasguidebackend.user.output.ItineraryPlan;
+import com.smarttours.atlasguidebackend.domain.user.input.Pace;
+import com.smarttours.atlasguidebackend.domain.user.input.TourGuidePersona;
+import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
