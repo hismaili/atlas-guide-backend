@@ -1,0 +1,4 @@
+DB_URL: jdbc:postgresql://localhost:5432/tours_advisor_db
+DB_USER: user
+DB_PASSWORD: password
+DB_DRIVER: org.postgresql.Driver

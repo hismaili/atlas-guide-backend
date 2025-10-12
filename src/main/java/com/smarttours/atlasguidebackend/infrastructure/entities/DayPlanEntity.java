@@ -13,7 +13,6 @@ import java.util.UUID;
 public class DayPlanEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private int dayInPlan;
@@ -88,5 +87,49 @@ public class DayPlanEntity {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private final DayPlanEntity dayPlan = new DayPlanEntity();
+
+        public DayPlanEntity build() {
+            return dayPlan;
+        }
+
+        public DayPlanEntity.Builder withDayNumber(int dayNumber) {
+            dayPlan.setDayInPlan(dayNumber);
+            return this;
+        }
+
+        public DayPlanEntity.Builder withDate(String date) {
+            dayPlan.setDate(date);
+            return this;
+        }
+
+        public DayPlanEntity.Builder withDayTitle(String dayTitle) {
+            dayPlan.setDayTitle(dayTitle);
+            return this;
+        }
+
+        public DayPlanEntity.Builder withDailySummary(String dailySummary) {
+            dayPlan.setDailySummary(dailySummary);
+            return this;
+        }
+
+        public DayPlanEntity.Builder withEvents(List<EventEntity> events) {
+            dayPlan.setEvents(events);
+            return this;
+        }
+
+
+        public Builder withId(UUID uuid) {
+            dayPlan.setId(uuid);
+            return this;
+        }
     }
 }

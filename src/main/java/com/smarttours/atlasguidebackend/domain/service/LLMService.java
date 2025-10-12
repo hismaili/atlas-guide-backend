@@ -32,9 +32,9 @@ public class LLMService {
         } catch (Exception e) {
             // Log the exception (you can use a logging framework here)
             logger.error("Error calling LLM: " + e.getMessage(), e);
+            throw e;
 
         }
-        return null;
     }
 
     private Pace infereOptionalPace(Pace pace) {

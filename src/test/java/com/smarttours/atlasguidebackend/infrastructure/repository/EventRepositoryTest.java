@@ -2,6 +2,7 @@ package com.smarttours.atlasguidebackend.infrastructure.repository;
 
 import com.smarttours.atlasguidebackend.infrastructure.entities.EventEntity;
 import com.smarttours.atlasguidebackend.infrastructure.entities.VisitCardEntity;
+import com.smarttours.atlasguidebackend.infrastructure.repository.jpa.EventRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,15 @@ class EventRepositoryTest {
     void saveAndRetrieveEventEntityWithVisitCard() {
         // Create VisitCardEntity
         VisitCardEntity visitCard = new VisitCardEntity();
+        UUID visitCardId = UUID.randomUUID();
+        visitCard.setId(visitCardId);
         visitCard.setName("Sample Visit Card");
         visitCard.setDescription("Description of the visit card");
 
         // Create EventEntity
-        //UUID eventId = UUID.randomUUID();
+        UUID eventId = UUID.randomUUID();
         EventEntity event = new EventEntity();
-        //event.setId(eventId);
+        event.setId(eventId);
         event.setType("Attraction");
         event.setStartTime("10:00 AM");
         event.setEndTime("12:00 PM");
@@ -61,15 +64,14 @@ class EventRepositoryTest {
     @Test
     void deleteEventEntity() {
         // Create EventEntity
-        //UUID eventId = UUID.randomUUID();
+        UUID eventId = UUID.randomUUID();
         EventEntity event = new EventEntity();
-        //event.setId(eventId);
+        event.setId(eventId);
         event.setType("Activity");
 
         // Save and delete EventEntity
         EventEntity savedEntity = eventRepository.save(event);
         assertThat(savedEntity.getId()).isNotNull();
-        UUID eventId = savedEntity.getId();
         eventRepository.deleteById(eventId);
 
         // Verify deletion

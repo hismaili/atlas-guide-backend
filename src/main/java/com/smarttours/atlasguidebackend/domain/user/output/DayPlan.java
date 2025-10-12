@@ -2,6 +2,8 @@ package com.smarttours.atlasguidebackend.domain.user.output;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +28,13 @@ public class DayPlan {
 
     // Constructors
     public DayPlan() {}
+
+    public DayPlan(int i, LocalDate localDate, String s, ArrayList<Event> events) {
+        this.day = i;
+        this.date = localDate.toString();
+        this.dayTitle = s;
+        this.events = events;
+    }
 
     // Getters and Setters
     public int getDay() {

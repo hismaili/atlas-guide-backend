@@ -1,9 +1,8 @@
 package com.smarttours.atlasguidebackend.exposition;
 
-import com.smarttours.atlasguidebackend.domain.service.ItineraryService;
+import com.smarttours.atlasguidebackend.domain.service.ItineraryGenerationService;
 import com.smarttours.atlasguidebackend.domain.service.SseService;
 import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
-import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,19 +14,20 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class SmartTravelGuide {
+public class ItineraryGenerationController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SmartTravelGuide.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ItineraryGenerationController.class);
 
-    private final ItineraryService itineraryService;
+    private final ItineraryGenerationService itineraryGenerationService;
     private final SseService sseService;
 
-    public SmartTravelGuide(ItineraryService itineraryService, SseService sseService) {
-        this.itineraryService = itineraryService;
+    public ItineraryGenerationController(ItineraryGenerationService itineraryGenerationService, SseService sseService) {
+        this.itineraryGenerationService = itineraryGenerationService;
         this.sseService = sseService;
     }
 
@@ -40,18 +40,15 @@ public class SmartTravelGuide {
     public ResponseEntity<Map<String, String>> generateVisitPlan(@Valid @RequestBody ItineraryRequest itineraryRequest) {
         // Log the request for debugging purposes
         LOG.info("Received itinerary request: {}", itineraryRequest);
-        ItineraryPlan entity;
         try {
             // Validate the request object
             if (itineraryRequest == null) {
                 throw new IllegalArgumentException("Itinerary request cannot be null.");
             }
 
-            // Generate a unique ID for this trip generation task
             String tripId = UUID.randomUUID().toString();
-
             // Start the generation process in the background. We don't wait for it.
-            itineraryService.createItineraryAsync(itineraryRequest, tripId);
+            itineraryGenerationService.createItineraryAsync(tripId, itineraryRequest);
 
             // Immediately return the tripId to the client
             return ResponseEntity.ok(Map.of("tripId", tripId));

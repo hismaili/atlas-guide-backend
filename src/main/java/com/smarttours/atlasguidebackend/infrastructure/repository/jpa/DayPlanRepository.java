@@ -1,4 +1,4 @@
-package com.smarttours.atlasguidebackend.infrastructure.repository;
+package com.smarttours.atlasguidebackend.infrastructure.repository.jpa;
 
 import com.smarttours.atlasguidebackend.infrastructure.entities.DayPlanEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

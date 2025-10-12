@@ -1,6 +1,7 @@
 package com.smarttours.atlasguidebackend.infrastructure.repository;
 
 import com.smarttours.atlasguidebackend.infrastructure.entities.ItineraryPlanEntity;
+import com.smarttours.atlasguidebackend.infrastructure.repository.jpa.ItineraryPlanJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ItineraryPlanRepositoryTest {
 
     @Autowired
-    private ItineraryPlanRepository itineraryPlanRepository;
+    private ItineraryPlanJpaRepository itineraryPlanRepository;
 
     @DisplayName("Should save and retrieve an ItineraryPlanEntity successfully")
     @Test
     void saveAndRetrieveItineraryPlanEntity() {
 
         ItineraryPlanEntity entity = new ItineraryPlanEntity();
+        entity.setId(UUID.randomUUID());
         entity.setTripSummary("Sample Itinerary");
 
         ItineraryPlanEntity savedEntity = itineraryPlanRepository.save(entity);
@@ -49,6 +51,7 @@ class ItineraryPlanRepositoryTest {
     void deleteItineraryPlanEntity() {
 
         ItineraryPlanEntity entity = new ItineraryPlanEntity();
+        entity.setId(UUID.randomUUID());
         entity.setTripSummary("Itinerary to Delete");
 
         ItineraryPlanEntity savedEntity = itineraryPlanRepository.save(entity);

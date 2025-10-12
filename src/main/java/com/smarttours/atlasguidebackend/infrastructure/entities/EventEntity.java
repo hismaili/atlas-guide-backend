@@ -13,7 +13,6 @@ import java.util.UUID;
 public class EventEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String type;
@@ -22,7 +21,7 @@ public class EventEntity {
 
     private String endTime;
 
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private VisitCardEntity visitCardEntity;
 
     // Constructors

@@ -23,6 +23,13 @@ public class Event {
     // Constructors
     public Event() {}
 
+    public Event(String type, String startTime, String endTime, FicheDeVisite ficheDeVisite) {
+        this.type = type;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.ficheDeVisite = ficheDeVisite;
+    }
+
     // Getters and Setters
     public String getType() {
         return type;
@@ -54,5 +61,15 @@ public class Event {
 
     public void setFicheDeVisite(FicheDeVisite ficheDeVisite) {
         this.ficheDeVisite = ficheDeVisite;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "type='" + type + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", ficheDeVisite=" + ficheDeVisite +
+                '}';
     }
 }

@@ -14,7 +14,6 @@ import java.util.UUID;
 public class VisitCardEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @JsonProperty("name")

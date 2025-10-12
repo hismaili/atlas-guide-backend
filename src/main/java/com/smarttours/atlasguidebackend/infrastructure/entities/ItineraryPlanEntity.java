@@ -15,7 +15,6 @@ import java.util.UUID;
 public class ItineraryPlanEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String tripSummary;

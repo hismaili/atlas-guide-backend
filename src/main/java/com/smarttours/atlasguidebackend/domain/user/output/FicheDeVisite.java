@@ -2,6 +2,8 @@ package com.smarttours.atlasguidebackend.domain.user.output;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+
 /**
  * A detailed information card ("fiche de visite") for a specific attraction,
  * restaurant, or point of interest.
@@ -37,6 +39,12 @@ public class FicheDeVisite {
 
     @JsonProperty("logistics")
     private String logistics;
+
+    private String securityDescription;
+
+    private String[] nearByTransportations;
+
+    private String yourResponseAccuracy;
 
     // Constructors
     public FicheDeVisite() {}
@@ -120,5 +128,48 @@ public class FicheDeVisite {
 
     public void setLogistics(String logistics) {
         this.logistics = logistics;
+    }
+
+    public String getSecurityDescription() {
+        return securityDescription;
+    }
+
+    public void setSecurityDescription(String securityDescription) {
+        this.securityDescription = securityDescription;
+    }
+
+    public String[] getNearByTransportations() {
+        return nearByTransportations;
+    }
+
+    public void setNearByTransportations(String[] nearByTransportations) {
+        this.nearByTransportations = nearByTransportations;
+    }
+
+    public String getYourResponseAccuracy() {
+        return yourResponseAccuracy;
+    }
+
+    public void setYourResponseAccuracy(String yourResponseAccuracy) {
+        this.yourResponseAccuracy = yourResponseAccuracy;
+    }
+
+    @Override
+    public String toString() {
+        return "FicheDeVisite{" +
+                "name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", description='" + description + '\'' +
+                ", address='" + address + '\'' +
+                ", openingHours='" + openingHours + '\'' +
+                ", estimatedDurationMinutes=" + estimatedDurationMinutes +
+                ", ticketInfo='" + ticketInfo + '\'' +
+                ", whyItsForYou='" + whyItsForYou + '\'' +
+                ", insiderTip='" + insiderTip + '\'' +
+                ", logistics='" + logistics + '\'' +
+                ", securityDescription='" + securityDescription + '\'' +
+                ", nearByTransportations=" + Arrays.toString(nearByTransportations) +
+                ", yourResponseAccuracy='" + yourResponseAccuracy + '\'' +
+                '}';
     }
 }

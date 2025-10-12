@@ -1,8 +1,6 @@
 package com.smarttours.atlasguidebackend.domain.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
 import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import com.smarttours.atlasguidebackend.utils.UserPromptBuilder;
@@ -12,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ItineraryService {
+import java.util.UUID;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ItineraryService.class);
+@Service
+public class ItineraryGenerationService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ItineraryGenerationService.class);
 
     private static final String TOUR_GUIDE_SYSTEM_PROMPT = """
                     You are an elite, world-class travel expert named "Atlas." Your sole purpose is to function as a Personal Tourism Guide engine. You combine the logistical genius of a seasoned travel agent with the local, on-the-ground knowledge of a city's best guide.
@@ -35,18 +35,27 @@ public class ItineraryService {
     private final UserPromptBuilder promptBuilder;
     private final SseService sseService;
 
-    public ItineraryService(LLMService llmService,
-                            UserPromptBuilder promptBuilder,
-                            SseService sseService ) {
+    private final UserItineraryPersistenceService userItineraryPersistenceService;
+
+    public ItineraryGenerationService(LLMService llmService,
+                                      UserPromptBuilder promptBuilder,
+                                      SseService sseService,
+                                      UserItineraryPersistenceService userItineraryPersistenceService) {
         this.promptBuilder = promptBuilder;
         this.llmService = llmService;
         this.sseService = sseService;
+        this.userItineraryPersistenceService = userItineraryPersistenceService;
     }
 
     @Async
-    public void createItineraryAsync(@Valid ItineraryRequest request, String tripId) throws JsonProcessingException {
+    public void createItineraryAsync(String tripId, @Valid ItineraryRequest request) {
+
         try {
             LOG.info("Creating itinerary for request: {}", request);
+
+            //Save the user request
+            UUID requestId = userItineraryPersistenceService.saveItineraryRequest(tripId, request);
+
             // Build the prompt (we will do this in the next main step)
             String systemPrompt = promptBuilder.buildSystemPrompt(request);
             String userPrompt = promptBuilder.buildUserPrompt(request);
@@ -56,16 +65,23 @@ public class ItineraryService {
 
             LOG.info("Received itinerary plan: {}", plan);
 
-            ObjectMapper mapper = new ObjectMapper();
-            LOG.info(mapper.writeValueAsString(plan));
-
+            if(plan == null) {
+                throw new IllegalStateException("Received null itinerary plan from LLM");
+            }
+            //validate that we received a complete plan
+            plan.isComplete();
             // Once the task is done, send the result through the SSE service
             sseService.sendItinerary(tripId, plan);
+
+            // Save the itinerary response
+            userItineraryPersistenceService.saveItineraryPlan(requestId, plan);
+
 
             // --- MOCKED RESPONSE FOR NOW ---
             //return createMockPlan();
         } catch (Exception e) {
-            sseService.sendError(tripId, "Failed to generate itinerary.");
+            LOG.error("Error creating itinerary for tripId {}: {}", tripId, e.getMessage(), e);
+            sseService.sendError(tripId, "Failed to generate itinerary. "+ e.getMessage());
         }
     }
 }

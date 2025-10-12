@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: atlas-guide-backend
+  profiles:
+    active: ollama,debug
+  virtual-thread:
+    enabled: true
+  # Datasource configuration
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER}
+  jpa:
+    show-sql: ${show_sql:true}
+    hibernate:
+      ddl-auto: ${ddl-auto:update}
+      properties:
+        hibernate:
+          format_sql: ${format_sql:true}
+          order_inserts: true
+          order_updates: true
+          jdbc:
+            batch_size: ${batch_size:50}

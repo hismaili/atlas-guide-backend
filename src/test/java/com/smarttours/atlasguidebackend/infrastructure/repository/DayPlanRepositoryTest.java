@@ -1,6 +1,7 @@
 package com.smarttours.atlasguidebackend.infrastructure.repository;
 
 import com.smarttours.atlasguidebackend.infrastructure.entities.DayPlanEntity;
+import com.smarttours.atlasguidebackend.infrastructure.repository.jpa.DayPlanRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ class DayPlanRepositoryTest {
     @Test
     void saveAndRetrieveDayPlanEntity() {
         DayPlanEntity entity = new DayPlanEntity();
-        //entity.setId(id);
+        UUID id = UUID.randomUUID();
+        entity.setId(id);
         entity.setDayTitle("Sample Day Plan");
 
         DayPlanEntity savedDayPlan = dayPlanRepository.save(entity);
         assertThat(savedDayPlan.getId()).isNotNull();
-        UUID id = savedDayPlan.getId();
 
         Optional<DayPlanEntity> retrievedEntity = dayPlanRepository.findById(id);
 
@@ -49,12 +50,13 @@ class DayPlanRepositoryTest {
     void deleteDayPlanEntity() {
 
         DayPlanEntity entity = new DayPlanEntity();
+        UUID id = UUID.randomUUID();
+        entity.setId(id);
         entity.setDayTitle("Day Plan to Delete");
 
         DayPlanEntity savedEntity = dayPlanRepository.save(entity);
         assertThat(savedEntity.getId()).isNotNull();
 
-        UUID id = savedEntity.getId();
         dayPlanRepository.deleteById(id);
 
         Optional<DayPlanEntity> retrievedEntity = dayPlanRepository.findById(id);

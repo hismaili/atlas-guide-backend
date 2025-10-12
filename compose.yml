@@ -1,0 +1,76 @@
+services:
+#    web:
+#        image: nginx:latest
+#        ports:
+#        - "80:80"
+#        volumes:
+#        - ./html:/usr/share/nginx/html
+#        depends_on:
+#        - app
+#
+#    app:
+#        image: python:3.9-slim
+#        working_dir: /app
+#        volumes:
+#        - ./app:/app
+#        command: python app.py
+#        depends_on:
+#        - db
+    db:
+        image: postgres:13
+        environment:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: tours_advisor_db
+        ports:
+          - "5432:5432"
+        volumes:
+        - db_data:/var/lib/postgresql/data
+
+    # hvault to manage database credentials, API keys, and other secrets
+    hvault:
+        image: hashicorp/vault:1.20
+        environment:
+          VAULT_DEV_ROOT_TOKEN_ID: tours_advisor_vault
+          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+        ports:
+        - "8200:8200"
+        command: vault server -dev
+        volumes:
+        - ./vault/config:/vault/config
+        - ./vault/data:/vault/file
+
+    #Keycloak for identity and access management
+#    keycloak:
+#        image: bitnami/keycloak:26.4.0
+#        environment:
+#          DB_VENDOR: POSTGRES
+#          DB_ADDR: db
+#          DB_DATABASE: tours_advisor_db
+#          DB_USER: user
+#          KC_BOOTSTRAP_ADMIN_USERNAME: tours_advisor_admin
+#          KC_BOOTSTRAP_ADMIN_PASSWORD: T0ur$_@dv1s0r_p@S$w0rd!
+#          #KC_HEALTH_ENABLED: true
+#          #KC_METRICS_ENABLED: true
+#          KEYCLOAK_USER: admin
+#          KEYCLOAK_PASSWORD: admin
+#        command: start
+#        ports:
+#        - "9080:9080"
+#        depends_on:
+#        - db
+
+
+volumes:
+#    ./html:
+#    ./app:
+  db_data:
+    driver: local
+#    driver_opts:
+#      dataset_name: tours_advisor_db
+#      size: '5G'
+#    ./vault/config:
+#      driver: local
+#      driver_opts:
+#        dataset_name: vault_config
+#        size: '1G'
