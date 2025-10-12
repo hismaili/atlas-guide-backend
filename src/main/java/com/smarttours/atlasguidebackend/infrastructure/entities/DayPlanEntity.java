@@ -2,8 +2,9 @@ package com.smarttours.atlasguidebackend.infrastructure.entities;
 
 import jakarta.persistence.*;
 
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 /**
  * Represents the itinerary for a single day.
@@ -13,7 +14,8 @@ import java.util.UUID;
 public class DayPlanEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "day_plan_seq")
+    @SequenceGenerator(name = "day_plan_seq", sequenceName = "day_plan_seq", allocationSize = 50)
     private Long id;
 
     private int dayInPlan;
@@ -22,11 +24,23 @@ public class DayPlanEntity {
 
     private String dayTitle;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String dailySummary;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dayPlan", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<EventEntity> events;
+
+    @ManyToOne
+    @JoinColumn(name = "itinerary_plan_id", nullable = false)
+    private ItineraryPlanEntity itineraryPlan;
+
+    public ItineraryPlanEntity getItineraryPlan() {
+        return itineraryPlan;
+    }
+
+    public void setItineraryPlan(ItineraryPlanEntity itineraryPlan) {
+        this.itineraryPlan = itineraryPlan;
+    }
 
     // Constructors
     public DayPlanEntity() {}
@@ -131,6 +145,11 @@ public class DayPlanEntity {
 
         public Builder withId(Long uuid) {
             dayPlan.setId(uuid);
+            return this;
+        }
+
+        public Builder withItineraryPlan(ItineraryPlanEntity itineraryPlan) {
+            dayPlan.setItineraryPlan(itineraryPlan);
             return this;
         }
     }

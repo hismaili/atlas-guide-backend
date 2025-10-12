@@ -1,0 +1,6 @@
+logging:
+  level:
+    org.apache.coyote.http11: DEBUG
+    org.springframework.ai.chat.client.advisor: debug
+    org.hibernate.SQL: DEBUG
+    org.hibernate.engine.jdbc.batch.internal.BatchingBatch: DEBUG

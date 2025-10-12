@@ -14,37 +14,32 @@ import java.util.UUID;
 public class VisitCardEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "day_plan_seq")
+    @SequenceGenerator(name = "day_plan_seq", sequenceName = "day_plan_seq", allocationSize = 50)
     private Long id;
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("category")
     private String category;
 
-    @JsonProperty("description")
+    //TODO check the length before saving
+    @Column(length = 700)
     private String description;
 
-    @JsonProperty("address")
     private String address;
 
-    @JsonProperty("opening_hours")
     private String openingHours;
 
-    @JsonProperty("estimated_duration_minutes")
     private int estimatedDurationMinutes;
 
-    @JsonProperty("ticket_info")
     private String ticketInfo;
 
-    @JsonProperty("why_its_for_you")
+    @Column(length = 700)
     private String whyItsForYou;
 
-    @JsonProperty("insider_tip")
+    @Column(length = 700)
     private String insiderTip;
 
-    @JsonProperty("logistics")
     private String logistics;
 
     // Constructors

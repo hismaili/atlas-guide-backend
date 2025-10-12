@@ -19,10 +19,10 @@ public class UserItineraryRequest {
 
     private String tripId;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String itineraryRequestJson;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String itineraryResponseJson;
 
     @OneToOne(

@@ -2,8 +2,6 @@ package com.smarttours.atlasguidebackend.infrastructure.entities;
 
 import jakarta.persistence.*;
 
-import java.util.UUID;
-
 /**
  * Represents a single event within a day's itinerary,
  * such as an attraction, meal, or activity.
@@ -13,7 +11,9 @@ import java.util.UUID;
 public class EventEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "day_plan_seq")
+    @SequenceGenerator(name = "day_plan_seq", sequenceName = "day_plan_seq", allocationSize = 50)
+
     private Long id;
 
     private String type;
@@ -23,7 +23,20 @@ public class EventEntity {
     private String endTime;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "visit_card_id")
     private VisitCardEntity visitCardEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "day_plan_id", nullable = false)
+    private DayPlanEntity dayPlan;
+
+    public DayPlanEntity getDayPlan() {
+        return dayPlan;
+    }
+
+    public void setDayPlan(DayPlanEntity dayPlan) {
+        this.dayPlan = dayPlan;
+    }
 
     // Constructors
     public EventEntity() {}

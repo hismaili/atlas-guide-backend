@@ -1,20 +1,22 @@
 package com.smarttours.atlasguidebackend.infrastructure.repository;
 
+import com.smarttours.atlasguidebackend.infrastructure.entities.DayPlanEntity;
 import com.smarttours.atlasguidebackend.infrastructure.entities.ItineraryPlanEntity;
 import com.smarttours.atlasguidebackend.infrastructure.repository.jpa.ItineraryPlanJpaRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.random.RandomGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@ActiveProfiles("test")
 class ItineraryPlanRepositoryTest {
 
     @Autowired
@@ -60,5 +62,25 @@ class ItineraryPlanRepositoryTest {
 
         Optional<ItineraryPlanEntity> retrievedEntity = itineraryPlanRepository.findById(id);
         assertThat(retrievedEntity).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    public void testBatchInsert() {
+        ItineraryPlanEntity plan = new ItineraryPlanEntity();
+        plan.setTripSummary("Test");
+
+        List<DayPlanEntity> days = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            DayPlanEntity day = new DayPlanEntity();
+            day.setDayTitle("Day " + i);
+            day.setItineraryPlan(plan);  // Set parent reference
+            days.add(day);
+        }
+        plan.setDayPlans(days);
+
+        ItineraryPlanEntity savedPlan = itineraryPlanRepository.saveAndFlush(plan);
+        assertThat(savedPlan.getId()).isNotNull();
+        assertThat(savedPlan.getDayPlans()).hasSize(10);
     }
 }

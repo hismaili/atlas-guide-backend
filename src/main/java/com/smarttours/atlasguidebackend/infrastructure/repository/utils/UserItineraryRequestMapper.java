@@ -109,12 +109,12 @@ public class UserItineraryRequestMapper {
         ItineraryPlanEntity entity = new ItineraryPlanEntity();
         entity.setTripSummary(itineraryPlan.getTripSummary());
 
-        List<DayPlanEntity> dayPlanEntities = validateAndGetItinerary(itineraryPlan);
+        List<DayPlanEntity> dayPlanEntities = validateAndGetItinerary(itineraryPlan, entity);
         entity.setDayPlans(dayPlanEntities);
         return entity;
     }
 
-    private static List<DayPlanEntity> validateAndGetItinerary(ItineraryPlan itineraryPlan) throws UncompleteItineraryException {
+    private static List<DayPlanEntity> validateAndGetItinerary(ItineraryPlan itineraryPlan, ItineraryPlanEntity entity) throws UncompleteItineraryException {
         List<DayPlan> DayPlanList = itineraryPlan.getItinerary();
         if(CollectionUtils.isEmpty(DayPlanList)) {
             throw new UncompleteItineraryException("ItineraryPlan must contain at least one DayPlan");
@@ -122,13 +122,16 @@ public class UserItineraryRequestMapper {
         return DayPlanList.stream().map(dayPlan ->
                 {
                     try {
-                        return builder()
+
+                        DayPlanEntity dayPlanEntity = builder()
                                 .withDayNumber(dayPlan.getDay())
                                 .withDate(dayPlan.getDate())
-                                .withEvents(mapDayEvents(dayPlan.getEvents()))
                                 .withDayTitle(dayPlan.getDayTitle())
                                 .withDailySummary(dayPlan.getDailySummary())
+                                .withItineraryPlan(entity)
                                 .build();
+                        dayPlanEntity.setEvents(mapDayEvents(dayPlan.getEvents(), dayPlanEntity));
+                        return dayPlanEntity;
                     } catch (UncompleteItineraryException e) {
                         throw new RuntimeException(e);
                     }
@@ -138,7 +141,7 @@ public class UserItineraryRequestMapper {
 
 
 
-    private static List<EventEntity> mapDayEvents(List<Event> dayPlanEvents) throws UncompleteItineraryException {
+    private static List<EventEntity> mapDayEvents(List<Event> dayPlanEvents, DayPlanEntity dayPlanEntity) throws UncompleteItineraryException {
         if(CollectionUtils.isEmpty(dayPlanEvents)) {
             throw new UncompleteItineraryException("Each DayPlan must contain at least one Event.");
         }
@@ -150,6 +153,7 @@ public class UserItineraryRequestMapper {
                 if(event.getFicheDeVisite() != null) {
                     eventEntity.setFicheDeVisite(mapVisitCard(event.getFicheDeVisite()));
                 }
+                eventEntity.setDayPlan(dayPlanEntity);
                 return eventEntity;
         }).collect(toList());
     }

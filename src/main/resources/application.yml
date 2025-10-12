@@ -12,9 +12,9 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: ${DB_DRIVER}
   jpa:
-    show-sql: ${show_sql:true}
+    show-sql: ${show_sql:false}
     hibernate:
-      ddl-auto: ${ddl-auto:create-drop}
+      ddl-auto: ${ddl-auto:update}
     properties:
       hibernate:
         format_sql: ${format_sql:false}
@@ -22,4 +22,9 @@ spring:
         order_updates: true
         jdbc:
           batch_size: ${batch_size:50}
-          batch_versioned_data: true
+        batch_versioned_data: true
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: TRACE  # Show parameter binding
+    org.hibernate.orm.jdbc.batch: DEBUG
