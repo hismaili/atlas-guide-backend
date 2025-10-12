@@ -28,7 +28,7 @@ public class ConcreteItineraryRepository implements ItineraryRepository {
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public UUID saveItineraryRequest(String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException {
+    public long saveItineraryRequest(String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException {
         UserItineraryRequest userItineraryRequest = UserItineraryRequestMapper.toEntity(itineraryRequest, tripId);
         UserItineraryRequest savedItineraryRequest = userItineraryRequestJpaRepository.save(userItineraryRequest);
 
@@ -36,7 +36,7 @@ public class ConcreteItineraryRepository implements ItineraryRepository {
     }
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public UUID saveItineraryResponse(UUID requestId, ItineraryPlan itineraryPlan) throws JsonProcessingException, UncompleteItineraryException {
+    public long saveItineraryResponse(long requestId, ItineraryPlan itineraryPlan) throws JsonProcessingException, UncompleteItineraryException {
         UserItineraryRequest userItineraryRequest = userItineraryRequestJpaRepository.getReferenceById(requestId);
 
         // Update the itinerary response JSON

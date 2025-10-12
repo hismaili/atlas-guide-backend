@@ -19,7 +19,7 @@ public class UserItineraryPersistenceService {
         this.itineraryRepository = itineraryRepository;
     }
 
-    public UUID saveItineraryRequest(String tripId, ItineraryRequest request) throws ItineraryPersitenceException {
+    public long saveItineraryRequest(String tripId, ItineraryRequest request) throws ItineraryPersitenceException {
         try {
             return itineraryRepository.saveItineraryRequest(tripId, request);
         } catch (JsonProcessingException e) {
@@ -27,7 +27,7 @@ public class UserItineraryPersistenceService {
         }
     }
 
-    public void saveItineraryPlan(UUID requestId, ItineraryPlan plan) throws ItineraryPersitenceException {
+    public void saveItineraryPlan(long requestId, ItineraryPlan plan) throws ItineraryPersitenceException {
         try {
             itineraryRepository.saveItineraryResponse(requestId, plan);
         } catch (JsonProcessingException | UncompleteItineraryException e) {

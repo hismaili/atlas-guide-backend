@@ -19,17 +19,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -81,16 +82,17 @@ public class ItineraryGenerationServiceTest {
 
         Mockito.when(itineraryPlanJpaRepository.save(any())).thenAnswer(i -> {
                 ItineraryPlanEntity argument = (ItineraryPlanEntity) i.getArgument(0);
-                if(argument.getId() == null)
-                    argument.setId(UUID.randomUUID());
+                if(argument.getId() == 0L)
+                    argument.setId(RandomGenerator.getDefault().nextLong());
                 return argument;
             }
         );
-        final Map<UUID, UserItineraryRequest> db = new HashMap<>();
+        final Map<Long, UserItineraryRequest> db = new HashMap<>();
         when(userItineraryRequestJpaRepository.save(any())).thenAnswer(i -> {
                     UserItineraryRequest argument = i.getArgument(0);
-                    if(argument.getUserItineraryRequestId() == null) {
-                        argument.setUserItineraryRequestId(UUID.randomUUID());
+                    if(argument.getUserItineraryRequestId() == 0L) {
+                        long id = Random.from(RandomGenerator.getDefault()).nextLong();
+                        argument.setUserItineraryRequestId(id);
                     }
                     db.put(argument.getUserItineraryRequestId(), argument);
                     return argument;
@@ -98,7 +100,7 @@ public class ItineraryGenerationServiceTest {
         );
 
         when(userItineraryRequestJpaRepository.getReferenceById(any())).thenAnswer(i -> {
-                    UUID argument = i.getArgument(0);
+                    long argument = i.getArgument(0);
                     return db.get(argument);
                 }
         );
@@ -192,7 +194,7 @@ public class ItineraryGenerationServiceTest {
     @TestConfiguration
     @ComponentScan(basePackages = {
             "com.smarttours.atlasguidebackend.domain.service",
-            "com.smarttours.atlasguidebackend.infrastructure.repository"
+            "com.smarttours.atlasguidebackend.infrastructure"
     })
     static class TestConfig {
         // Additional test-specific beans can be defined here if needed.

@@ -14,11 +14,12 @@ spring:
   jpa:
     show-sql: ${show_sql:true}
     hibernate:
-      ddl-auto: ${ddl-auto:update}
-      properties:
-        hibernate:
-          format_sql: ${format_sql:true}
-          order_inserts: true
-          order_updates: true
-          jdbc:
-            batch_size: ${batch_size:50}
+      ddl-auto: ${ddl-auto:create-drop}
+    properties:
+      hibernate:
+        format_sql: ${format_sql:false}
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: ${batch_size:50}
+          batch_versioned_data: true

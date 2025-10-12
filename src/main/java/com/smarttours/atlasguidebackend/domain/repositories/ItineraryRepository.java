@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ItineraryRepository {
 
-    UUID saveItineraryRequest(String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException;
+    long saveItineraryRequest(String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException;
 
-    UUID saveItineraryResponse(UUID requestId, ItineraryPlan itineraryPlan) throws JsonProcessingException, UncompleteItineraryException;
+    long saveItineraryResponse(long requestId, ItineraryPlan itineraryPlan) throws JsonProcessingException, UncompleteItineraryException;
 }

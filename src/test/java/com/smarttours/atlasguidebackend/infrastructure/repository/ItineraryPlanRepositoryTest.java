@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
+import java.util.random.RandomGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,12 +25,10 @@ class ItineraryPlanRepositoryTest {
     void saveAndRetrieveItineraryPlanEntity() {
 
         ItineraryPlanEntity entity = new ItineraryPlanEntity();
-        entity.setId(UUID.randomUUID());
         entity.setTripSummary("Sample Itinerary");
 
         ItineraryPlanEntity savedEntity = itineraryPlanRepository.save(entity);
-        UUID id = savedEntity.getId();
-        assertThat(id).isNotNull();
+        long id = savedEntity.getId();
 
         Optional<ItineraryPlanEntity> retrievedEntity = itineraryPlanRepository.findById(id);
 
@@ -39,7 +39,7 @@ class ItineraryPlanRepositoryTest {
     @DisplayName("Should return empty when retrieving a non-existent ItineraryPlanEntity")
     @Test
     void retrieveNonExistentItineraryPlanEntity() {
-        UUID nonExistentId = UUID.randomUUID();
+        long nonExistentId = Random.from(RandomGenerator.getDefault()).nextLong(1, Long.MAX_VALUE);
 
         Optional<ItineraryPlanEntity> retrievedEntity = itineraryPlanRepository.findById(nonExistentId);
 
@@ -51,13 +51,11 @@ class ItineraryPlanRepositoryTest {
     void deleteItineraryPlanEntity() {
 
         ItineraryPlanEntity entity = new ItineraryPlanEntity();
-        entity.setId(UUID.randomUUID());
         entity.setTripSummary("Itinerary to Delete");
 
         ItineraryPlanEntity savedEntity = itineraryPlanRepository.save(entity);
         assertThat(savedEntity).isNotNull();
-        UUID id = savedEntity.getId();
-        assertThat(id).isNotNull();
+        long id = savedEntity.getId();
         itineraryPlanRepository.deleteById(id);
 
         Optional<ItineraryPlanEntity> retrievedEntity = itineraryPlanRepository.findById(id);

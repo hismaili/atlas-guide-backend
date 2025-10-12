@@ -14,7 +14,8 @@ import java.util.UUID;
 public class VisitCardEntity {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     @JsonProperty("name")
     private String name;
@@ -130,11 +131,11 @@ public class VisitCardEntity {
         this.logistics = logistics;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

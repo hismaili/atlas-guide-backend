@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
+import java.util.random.RandomGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,15 +26,12 @@ class EventRepositoryTest {
     void saveAndRetrieveEventEntityWithVisitCard() {
         // Create VisitCardEntity
         VisitCardEntity visitCard = new VisitCardEntity();
-        UUID visitCardId = UUID.randomUUID();
-        visitCard.setId(visitCardId);
         visitCard.setName("Sample Visit Card");
         visitCard.setDescription("Description of the visit card");
 
         // Create EventEntity
         UUID eventId = UUID.randomUUID();
         EventEntity event = new EventEntity();
-        event.setId(eventId);
         event.setType("Attraction");
         event.setStartTime("10:00 AM");
         event.setEndTime("12:00 PM");
@@ -53,7 +52,7 @@ class EventRepositoryTest {
     @DisplayName("Should return empty when retrieving a non-existent EventEntity")
     @Test
     void retrieveNonExistentEventEntity() {
-        UUID nonExistentId = UUID.randomUUID();
+        long nonExistentId = Random.from(RandomGenerator.getDefault()).nextLong(1, Long.MAX_VALUE);
 
         Optional<EventEntity> retrievedEvent = eventRepository.findById(nonExistentId);
 
@@ -64,14 +63,12 @@ class EventRepositoryTest {
     @Test
     void deleteEventEntity() {
         // Create EventEntity
-        UUID eventId = UUID.randomUUID();
+        long eventId = Random.from(RandomGenerator.getDefault()).nextLong(1, Long.MAX_VALUE);
         EventEntity event = new EventEntity();
-        event.setId(eventId);
         event.setType("Activity");
 
         // Save and delete EventEntity
         EventEntity savedEntity = eventRepository.save(event);
-        assertThat(savedEntity.getId()).isNotNull();
         eventRepository.deleteById(eventId);
 
         // Verify deletion

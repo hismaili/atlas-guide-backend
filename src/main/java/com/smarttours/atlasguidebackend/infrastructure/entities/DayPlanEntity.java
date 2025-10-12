@@ -13,7 +13,8 @@ import java.util.UUID;
 public class DayPlanEntity {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     private int dayInPlan;
 
@@ -21,9 +22,10 @@ public class DayPlanEntity {
 
     private String dayTitle;
 
+    @Lob
     private String dailySummary;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<EventEntity> events;
 
     // Constructors
@@ -81,11 +83,11 @@ public class DayPlanEntity {
                 '}';
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -127,7 +129,7 @@ public class DayPlanEntity {
         }
 
 
-        public Builder withId(UUID uuid) {
+        public Builder withId(Long uuid) {
             dayPlan.setId(uuid);
             return this;
         }

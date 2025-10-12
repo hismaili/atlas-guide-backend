@@ -21,8 +21,6 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
 
 import static com.smarttours.atlasguidebackend.infrastructure.entities.DayPlanEntity.*;
 import static java.util.stream.Collectors.toList;
@@ -98,7 +96,6 @@ public class UserItineraryRequestMapper {
             return null;
         }
         com.smarttours.atlasguidebackend.infrastructure.entities.UserItineraryRequest  entity = new com.smarttours.atlasguidebackend.infrastructure.entities.UserItineraryRequest();
-        entity.setUserItineraryRequestId(UUID.randomUUID());
         entity.setItineraryRequestJson(objectMapper.writeValueAsString(itineraryInputRequest));
         entity.setTripId(tripId);
         return entity;
@@ -110,11 +107,10 @@ public class UserItineraryRequestMapper {
 
     public static ItineraryPlanEntity itineraryPlanToEntity(ItineraryPlan itineraryPlan) throws UncompleteItineraryException {
         ItineraryPlanEntity entity = new ItineraryPlanEntity();
-        entity.setId(UUID.randomUUID());
         entity.setTripSummary(itineraryPlan.getTripSummary());
 
         List<DayPlanEntity> dayPlanEntities = validateAndGetItinerary(itineraryPlan);
-        entity.setItinerary(dayPlanEntities);
+        entity.setDayPlans(dayPlanEntities);
         return entity;
     }
 
@@ -127,7 +123,6 @@ public class UserItineraryRequestMapper {
                 {
                     try {
                         return builder()
-                                .withId(UUID.randomUUID())
                                 .withDayNumber(dayPlan.getDay())
                                 .withDate(dayPlan.getDate())
                                 .withEvents(mapDayEvents(dayPlan.getEvents()))
@@ -149,7 +144,6 @@ public class UserItineraryRequestMapper {
         }
         return dayPlanEvents.stream().map(event -> {
                 EventEntity eventEntity = new EventEntity();
-                eventEntity.setId(UUID.randomUUID());
                 eventEntity.setType(event.getType());
                 eventEntity.setStartTime(event.getStartTime());
                 eventEntity.setEndTime(event.getEndTime());
@@ -163,7 +157,6 @@ public class UserItineraryRequestMapper {
     private static VisitCardEntity mapVisitCard
             (FicheDeVisite ficheDeVisite) {
         VisitCardEntity visitCard = new VisitCardEntity();
-        visitCard.setId(UUID.randomUUID());
         visitCard.setName(ficheDeVisite.getName());
         visitCard.setAddress(ficheDeVisite.getAddress());
         visitCard.setCategory(ficheDeVisite.getCategory());

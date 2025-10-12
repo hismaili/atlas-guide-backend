@@ -13,7 +13,8 @@ import java.util.UUID;
 public class EventEntity {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     private String type;
 
@@ -21,7 +22,7 @@ public class EventEntity {
 
     private String endTime;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private VisitCardEntity visitCardEntity;
 
     // Constructors
@@ -60,11 +61,11 @@ public class EventEntity {
         this.visitCardEntity = visitCardEntity;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

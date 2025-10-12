@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Budget {
     BUDGET_FRIENDLY("Budget-friendly"),
-    formatDateForAPI("Moderate"),
+    MODERATE("Moderate"),
     PREMIUM("Premium");
 
     private final String value;

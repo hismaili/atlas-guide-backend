@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface ItineraryPlanJpaRepository extends JpaRepository<ItineraryPlanEntity, UUID> {
+public interface ItineraryPlanJpaRepository extends JpaRepository<ItineraryPlanEntity, Long> {
 }

@@ -3,8 +3,10 @@ package com.smarttours.atlasguidebackend.infrastructure.entities;
 import jakarta.persistence.*;
 
 import java.sql.Blob;
+import java.util.Objects;
 import java.util.UUID;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
 import static jakarta.persistence.GenerationType.UUID;
 
 @Entity
@@ -12,7 +14,8 @@ import static jakarta.persistence.GenerationType.UUID;
 public class UserItineraryRequest {
 
     @Id
-    private UUID userItineraryRequestId;
+    @GeneratedValue(strategy = SEQUENCE)
+    private Long userItineraryRequestId;
 
     private String tripId;
 
@@ -40,11 +43,11 @@ public class UserItineraryRequest {
     // Getters and Setters
 
 
-    public UUID getUserItineraryRequestId() {
+    public Long getUserItineraryRequestId() {
         return userItineraryRequestId;
     }
 
-    public void setUserItineraryRequestId(UUID userItineraryRequestId) {
+    public void setUserItineraryRequestId(Long userItineraryRequestId) {
         this.userItineraryRequestId = userItineraryRequestId;
     }
 
@@ -98,11 +101,11 @@ public class UserItineraryRequest {
         if (this == o) return true;
         if (!(o instanceof UserItineraryRequest that)) return false;
 
-        return getUserItineraryRequestId() != null ? getUserItineraryRequestId().equals(that.getUserItineraryRequestId()) : that.getUserItineraryRequestId() == null;
+        return getUserItineraryRequestId() == that.getUserItineraryRequestId();
     }
 
     @Override
     public int hashCode() {
-        return getUserItineraryRequestId() != null ? getUserItineraryRequestId().hashCode() : 0;
+        return Objects.hashCode(getUserItineraryRequestId());
     }
 }
