@@ -14,7 +14,7 @@ spring:
   jpa:
     show-sql: ${show_sql:false}
     hibernate:
-      ddl-auto: ${ddl-auto:update}
+      ddl-auto: ${ddl-auto:create-drop} # Use 'update' or 'validate' in production
     properties:
       hibernate:
         format_sql: ${format_sql:false}
@@ -23,8 +23,30 @@ spring:
         jdbc:
           batch_size: ${batch_size:50}
         batch_versioned_data: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          audience: tours-advisor-mobile
+          issuer-uri: http://localhost:8080/realms/tours-advisor
+#          jwk-set-uri: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/certs
+#      client:
+#        registration:
+#          keycloak:
+#            client-id: tours-advisor-backend
+#            client-secret: YOUR_CLIENT_SECRET_FROM_KEYCLOAK
+#            authorization-grant-type: client_credentials
+#            scope: openid, profile, email
+#        provider:
+#          keycloak:
+#            issuer-uri: http://localhost:8080/realms/tours-advisor
 
 logging:
   level:
     org.hibernate.orm.jdbc.bind: TRACE  # Show parameter binding
     org.hibernate.orm.jdbc.batch: DEBUG
+
+server:
+  port: ${SERVER_PORT:8090}
+#  servlet:
+#    context-path: /api

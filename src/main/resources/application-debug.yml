@@ -4,3 +4,4 @@ logging:
     org.springframework.ai.chat.client.advisor: debug
     org.hibernate.SQL: DEBUG
     org.hibernate.engine.jdbc.batch.internal.BatchingBatch: DEBUG
+    org.springframework.security: DEBUG

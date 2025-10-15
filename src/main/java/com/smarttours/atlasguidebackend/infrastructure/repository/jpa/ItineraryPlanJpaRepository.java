@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface ItineraryPlanJpaRepository extends JpaRepository<ItineraryPlanEntity, Long> {
+    ItineraryPlanEntity findByTripId(String tripId);
 }

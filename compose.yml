@@ -1,76 +1,125 @@
+version: '3.8'
+
 services:
-#    web:
-#        image: nginx:latest
-#        ports:
-#        - "80:80"
-#        volumes:
-#        - ./html:/usr/share/nginx/html
-#        depends_on:
-#        - app
-#
-#    app:
-#        image: python:3.9-slim
-#        working_dir: /app
-#        volumes:
-#        - ./app:/app
-#        command: python app.py
-#        depends_on:
-#        - db
-    db:
-        image: postgres:13
-        environment:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: tours_advisor_db
-        ports:
-          - "5432:5432"
-        volumes:
-        - db_data:/var/lib/postgresql/data
+  # PostgreSQL Database - Main application database
+  db:
+    image: postgres:15
+    container_name: tours-advisor-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_in_production}
+    ports:
+      - "5432:5432"  # Exposed for local development only
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
-    # hvault to manage database credentials, API keys, and other secrets
-    hvault:
-        image: hashicorp/vault:1.20
-        environment:
-          VAULT_DEV_ROOT_TOKEN_ID: tours_advisor_vault
-          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
-        ports:
-        - "8200:8200"
-        command: vault server -dev
-        volumes:
-        - ./vault/config:/vault/config
-        - ./vault/data:/vault/file
+  # HashiCorp Vault - Secrets management
+  vault:
+    image: hashicorp/vault:1.15
+    container_name: tours-advisor-vault
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_ROOT_TOKEN:-dev-only-token}
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      VAULT_ADDR: http://0.0.0.0:8200
+    ports:
+      - "8200:8200"
+    command: server -dev
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault_data:/vault/file
+      - ./vault/config:/vault/config
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "vault", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
 
-    #Keycloak for identity and access management
-#    keycloak:
-#        image: bitnami/keycloak:26.4.0
-#        environment:
-#          DB_VENDOR: POSTGRES
-#          DB_ADDR: db
-#          DB_DATABASE: tours_advisor_db
-#          DB_USER: user
-#          KC_BOOTSTRAP_ADMIN_USERNAME: tours_advisor_admin
-#          KC_BOOTSTRAP_ADMIN_PASSWORD: T0ur$_@dv1s0r_p@S$w0rd!
-#          #KC_HEALTH_ENABLED: true
-#          #KC_METRICS_ENABLED: true
-#          KEYCLOAK_USER: admin
-#          KEYCLOAK_PASSWORD: admin
-#        command: start
-#        ports:
-#        - "9080:9080"
-#        depends_on:
-#        - db
+  # Keycloak - Identity and Access Management
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: tours-advisor-keycloak
+    command: start-dev
+    environment:
+      # Database configuration
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/keycloak_db
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USER:-keycloak}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak_password}
 
+      # Admin console credentials
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+
+      # Development mode settings
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+
+      # Logging
+      KC_LOG_LEVEL: INFO
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # Spring Boot Application (uncomment when ready)
+  # app:
+  #   image: tours-advisor-backend:latest
+  #   container_name: tours-advisor-app
+  #   environment:
+  #     # Database
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tours_advisor_db
+  #     SPRING_DATASOURCE_USERNAME: ${APP_DB_USER:-app_user}
+  #     SPRING_DATASOURCE_PASSWORD: ${APP_DB_PASSWORD:-app_password}
+  #
+  #     # Keycloak OAuth2
+  #     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/tours-advisor
+  #     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/tours-advisor/protocol/openid-connect/certs
+  #
+  #     # Vault integration (optional)
+  #     SPRING_CLOUD_VAULT_URI: http://vault:8200
+  #     SPRING_CLOUD_VAULT_TOKEN: ${VAULT_ROOT_TOKEN:-dev-only-token}
+  #   ports:
+  #     - "8081:8081"
+  #   depends_on:
+  #     - db
+  #     - keycloak
+  #     - vault
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
-#    ./html:
-#    ./app:
   db_data:
     driver: local
-#    driver_opts:
-#      dataset_name: tours_advisor_db
-#      size: '5G'
-#    ./vault/config:
-#      driver: local
-#      driver_opts:
-#        dataset_name: vault_config
-#        size: '1G'
+  vault_data:
+    driver: local

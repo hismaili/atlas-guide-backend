@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ItineraryGenerationController {
 

@@ -19,6 +19,8 @@ public class ItineraryPlanEntity {
     @SequenceGenerator(name = "itinerary_plan_seq", sequenceName = "itinerary_plan_seq", allocationSize = 50)
     private Long id;
 
+    private String tripId;
+
     @Column(columnDefinition = "TEXT")
     private String tripSummary;
 
@@ -59,5 +61,13 @@ public class ItineraryPlanEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(String tripId) {
+        this.tripId = tripId;
     }
 }

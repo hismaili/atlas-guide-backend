@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface UserItineraryRequestJpaRepository extends JpaRepository<UserItineraryRequest, Long> {
+    UserItineraryRequest findByTripId(String tripId);
 }

@@ -42,6 +42,12 @@ public class VisitCardEntity {
 
     private String logistics;
 
+    private String securityDescription;
+
+    private String[] nearByTransportations;
+
+    private String yourResponseAccuracy;
+
     // Constructors
     public VisitCardEntity() {}
 
@@ -132,5 +138,29 @@ public class VisitCardEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSecurityDescription() {
+        return securityDescription;
+    }
+
+    public void setSecurityDescription(String securityDescription) {
+        this.securityDescription = securityDescription;
+    }
+
+    public String[] getNearByTransportations() {
+        return nearByTransportations;
+    }
+
+    public void setNearByTransportations(String[] nearByTransportations) {
+        this.nearByTransportations = nearByTransportations;
+    }
+
+    public String getYourResponseAccuracy() {
+        return yourResponseAccuracy;
+    }
+
+    public void setYourResponseAccuracy(String yourResponseAccuracy) {
+        this.yourResponseAccuracy = yourResponseAccuracy;
     }
 }
