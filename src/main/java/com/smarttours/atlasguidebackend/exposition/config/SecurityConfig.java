@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/error", "/swagger-ui**").permitAll()
                 
                 // Admin endpoints - require ADMIN role
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
