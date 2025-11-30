@@ -1,7 +1,6 @@
 package com.smarttours.atlasguidebackend.domain.service;
 
 
-
 import com.smarttours.atlasguidebackend.domain.repositories.ItineraryRepository;
 import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
 import com.smarttours.atlasguidebackend.domain.user.output.DayPlan;
@@ -21,8 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,7 +34,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.random.RandomGenerator;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -90,7 +91,7 @@ public class ItineraryGenerationServiceTest {
         final Map<Long, UserItineraryRequest> db = new HashMap<>();
         when(userItineraryRequestJpaRepository.save(any())).thenAnswer(i -> {
                     UserItineraryRequest argument = i.getArgument(0);
-                    if(argument.getUserItineraryRequestId() == 0L) {
+                    if(argument.getUserItineraryRequestId() == null) {
                         long id = Random.from(RandomGenerator.getDefault()).nextLong();
                         argument.setUserItineraryRequestId(id);
                     }
@@ -115,6 +116,7 @@ public class ItineraryGenerationServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "user", password = "pass", roles = {"USER"})
     void createItineraryAsync_ShouldBuildPromptsAndSendResultViaSse() {
         ItineraryPlan validPlan = new ItineraryPlan();
         validPlan.setTripSummary("Valid Plan trip summary");
@@ -147,6 +149,7 @@ public class ItineraryGenerationServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "user", password = "pass", roles = {"USER"})
     void createItineraryAsync_WhenLlmServiceFails_ShouldNotSendSseEvent() {
         // --- Arrange ---
         // Configure the mock to throw an exception when called.
@@ -169,6 +172,7 @@ public class ItineraryGenerationServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "user", password = "pass", roles = {"USER"})
     void createItineraryAsync_ShouldThrowExceptionWhenResponseIsNotComplete() {
         ItineraryPlan incompletePlan = new ItineraryPlan();
         incompletePlan.setTripSummary("Incomplete Plan trip summary");
@@ -197,6 +201,5 @@ public class ItineraryGenerationServiceTest {
             "com.smarttours.atlasguidebackend.infrastructure"
     })
     static class TestConfig {
-        // Additional test-specific beans can be defined here if needed.
     }
 }

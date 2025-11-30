@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,6 +45,7 @@ public class TourGuideApiTest {
     String startDate = LocalDate.now().plusDays(30).format(java.time.format.DateTimeFormatter.ISO_DATE);
 
     @Test
+    @WithMockUser(username = "user", password = "pass", roles = {"USER"})
     void whenValidInput_thenReturns200() throws Exception {
 
         doNothing().when(itineraryGenerationService).createItineraryAsync(anyString(), any(ItineraryRequest.class));
@@ -54,7 +56,10 @@ public class TourGuideApiTest {
         validInput.put("tripDuration", 5);
         // Optional fields are not required for a valid request
 
-        mockMvc.perform(post("/api/v1/itinerary")
+
+
+        mockMvc.perform(
+                post("/api/itinerary")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validInput)))
                 .andExpect(status().isOk())
@@ -66,13 +71,14 @@ public class TourGuideApiTest {
     }
 
     @Test
+    @WithMockUser(username = "user", password = "pass", roles = {"USER"})
     void whenMissingDestination_thenReturns400() throws Exception {
         Map<String, Object> invalidInput = new HashMap<>();
         // Destination is missing
         invalidInput.put("startDate", this.startDate);
         invalidInput.put("tripDuration", 5);
 
-        mockMvc.perform(post("/api/v1/itinerary")
+        mockMvc.perform(post("/api/itinerary")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidInput)))
                 .andExpect(status().isBadRequest())
