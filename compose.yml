@@ -11,8 +11,8 @@ services:
     ports:
       - "5432:5432"  # Exposed for local development only
     volumes:
-      - db_data:./var/lib/postgresql/data
-      - ./init-db.sql:./docker-entrypoint-initdb.d/init-db.sql
+      - db_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - app-network
     healthcheck:
@@ -36,8 +36,8 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - vault_data:./vault/file
-      - ./vault/config:./vault/config
+      - vault_data:/vault/file
+      - ./vault/config:/vault/config
     networks:
       - app-network
     healthcheck:
