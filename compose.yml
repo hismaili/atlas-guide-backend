@@ -12,7 +12,7 @@ services:
       - "5432:5432"  # Exposed for local development only
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:Z
     networks:
       - app-network
     healthcheck:
@@ -30,14 +30,16 @@ services:
       VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_ROOT_TOKEN:-dev-only-token}
       VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
       VAULT_ADDR: http://0.0.0.0:8200
+      SKIP_CHOWN: "true"
+      TZ: UTC
     ports:
       - "8200:8200"
     command: server -dev
     cap_add:
       - IPC_LOCK
     volumes:
-      - vault_data:/vault/file
-      - ./vault/config:/vault/config
+      - vault_data:/vault/file:Z
+      - ./vault/config:/vault/config:z
     networks:
       - app-network
     healthcheck:
@@ -72,14 +74,12 @@ services:
 
       # Logging
       KC_LOG_LEVEL: INFO
+      TZ: UTC
     ports:
       - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     networks:
       - app-network
     healthcheck:
