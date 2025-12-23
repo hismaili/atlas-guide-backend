@@ -17,8 +17,8 @@ public class LLMService {
     private static final Logger logger = LoggerFactory.getLogger(LLMService.class);
     private final ChatClient chatClient;
 
-    LLMService(ChatClient.Builder builder) {
-        this.chatClient = builder.build();
+    LLMService(ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
 
     ItineraryPlan getItinerary(String systemPrompt, String userPrompt) {

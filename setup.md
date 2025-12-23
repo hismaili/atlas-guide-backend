@@ -33,20 +33,20 @@ echo ".env" >> .gitignore
 
 ```bash
 # Start all services
-docker-compose up -d
+podman compose up -d
 
 # Check status
-docker-compose ps
+podman compose ps
 
 # View logs
-docker-compose logs -f
+podman compose logs -f
 ```
 
 ### 4. Verify Services
 
 **PostgreSQL:**
 ```bash
-docker exec -it tours-advisor-db psql -U postgres -c "\l"
+podman exec -it tours-advisor-db psql -U postgres -c "\l"
 # Should show: tours_advisor_db and keycloak_db
 ```
 
@@ -115,7 +115,7 @@ docker exec -it tours-advisor-db psql -U postgres -c "\l"
 3. Click "Create"
 4. Go to "Credentials" tab
 5. Click "Set password"
-    - **Password**: Test123!
+    - **Password**: leyRXN+49ZR6LZAU73VW4+ABm3EAaN9G77w7Ef/siZI=
     - **Temporary**: OFF
 6. Click "Save"
 
@@ -194,7 +194,7 @@ const authState = await authorize(config);
 curl -X POST 'http://localhost:8080/realms/tours-advisor/protocol/openid-connect/token' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -d 'username=testuser' \
-  -d 'password=Test123!' \
+  -d 'password=<password>' \
   -d 'grant_type=password' \
   -d 'client_id=tours-advisor-mobile'
 ```
@@ -211,36 +211,36 @@ curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
 
 **Stop all services:**
 ```bash
-docker-compose down
+podman compose down
 ```
 
 **Stop and remove volumes (⚠️ deletes data):**
 ```bash
-docker-compose down -v
+podman compose down -v
 ```
 
 **Restart specific service:**
 ```bash
-docker-compose restart keycloak
+podman compose restart keycloak
 ```
 
 **View logs:**
 ```bash
 # All services
-docker-compose logs -f
+podman compose logs -f
 
 # Specific service
-docker-compose logs -f keycloak
+podman compose logs -f keycloak
 ```
 
 **Access database:**
 ```bash
-docker exec -it tours-advisor-db psql -U postgres -d tours_advisor_db
+podman exec -it tours-advisor-db psql -U postgres -d tours_advisor_db
 ```
 
 **Backup database:**
 ```bash
-docker exec tours-advisor-db pg_dump -U postgres tours_advisor_db > backup.sql
+podman exec tours-advisor-db pg_dump -U postgres tours_advisor_db > backup.sql
 ```
 
 ## 🔒 Production Considerations
@@ -266,16 +266,16 @@ Before deploying to production:
 ## 🆘 Troubleshooting
 
 **Keycloak won't start:**
-- Check if database is ready: `docker-compose logs db`
+- Check if database is ready: `podman compose logs db`
 - Verify database credentials in `.env`
 
 **Can't connect to database:**
-- Ensure PostgreSQL is running: `docker-compose ps`
+- Ensure PostgreSQL is running: `podman compose ps`
 - Check if port 5432 is available
 
 **Keycloak admin console not accessible:**
 - Wait 30-60 seconds for Keycloak to fully start
-- Check logs: `docker-compose logs keycloak`
+- Check logs: `podman compose logs keycloak`
 
 **React Native OAuth not working:**
 - Verify redirect URI matches exactly in Keycloak client config
