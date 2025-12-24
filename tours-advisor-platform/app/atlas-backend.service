@@ -1,0 +1,13 @@
+[Unit]
+Description=Atlas Guide Backend Daemon
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/opc/docker-compose/app
+ExecStart=/usr/bin/podman compose up
+ExecStop=/usr/bin/podman compose down
+Restart=always
+
+[Install]
+WantedBy=default.target
