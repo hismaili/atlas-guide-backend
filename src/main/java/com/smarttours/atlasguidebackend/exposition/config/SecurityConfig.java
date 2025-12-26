@@ -46,7 +46,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 // Public endpoints
                 .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/error", "/swagger-ui**").permitAll()
                 
                 // Admin endpoints - require ADMIN role
