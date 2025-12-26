@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: /home/opc
+      dockerfile: docker-compose/app/Dockerfile
+      args:
+        - JAR_FILE=app/atlas-guide-backend/target/atlas-guide-backend-0.0.1-SNAPSHOT.jar
+    container_name: atlas-guide-backend
+    env_file:
+      - /home/opc/docker-compose/.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=gemini
+      - TZ=UTC
+    networks:
+      - tours-network
+    restart: always
+
+networks:
+  tours-network:
+    external: true

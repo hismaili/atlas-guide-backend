@@ -12,9 +12,9 @@ spring:
   # Datasource configuration
   datasource:
     url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    driver-class-name: ${DB_DRIVER}
+    username: ${APP_DB_USER}
+    password: ${APP_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: ${show_sql:false}
     hibernate:
