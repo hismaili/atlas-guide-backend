@@ -1,8 +1,7 @@
 spring:
-  application:
-    name: atlas-guide-backend
-  profiles:
-    active: ollama,debug
+  cloud:
+    vault:
+      enabled: false
   virtual-thread:
     enabled: true
   config:
@@ -16,7 +15,7 @@ spring:
     url: ${DB_URL}
     username: ${APP_DB_USER}
     password: ${APP_DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: org.h2.Driver
   jpa:
     show-sql: ${show_sql:false}
     hibernate:
@@ -35,18 +34,6 @@ spring:
         jwt:
           audience: tours-advisor-mobile
           issuer-uri: http://localhost:8080/realms/tours-advisor
-#          jwk-set-uri: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/certs
-#      client:
-#        registration:
-#          keycloak:
-#            client-id: tours-advisor-backend
-#            client-secret: YOUR_CLIENT_SECRET_FROM_KEYCLOAK
-#            authorization-grant-type: client_credentials
-#            scope: openid, profile, email
-#        provider:
-#          keycloak:
-#            issuer-uri: http://localhost:8080/realms/tours-advisor
-
 
 springdoc:
   swagger-ui:
@@ -54,11 +41,3 @@ springdoc:
       authorization-url: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/auth
       token-url: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/token
       client-id: tours-advisor-mobile
-
-server:
-  port: ${SERVER_PORT:8090}
-#  servlet:
-#    context-path: /api
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui/home.html

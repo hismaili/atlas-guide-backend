@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    vault:
+      scheme: http
+      kv:
+        enabled: true
+      uri: ${VAULT_URI:http://localhost:8200}
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}

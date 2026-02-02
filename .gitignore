@@ -8,10 +8,17 @@ target/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/**
 *.iws
 *.iml
 *.ipr
+.jpb/
 
+### Terraform ###
+iac/.terraform/
+iac/terraform.tfstate
+iac/terraform.tfstate.backup
+iac/.terraform.lock.hcl
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -41,3 +48,6 @@ build/
 */infra/.env
 */app/.env
 *.env
+
+### Local files ###
+application-debug.yml

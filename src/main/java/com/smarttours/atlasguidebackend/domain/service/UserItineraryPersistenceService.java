@@ -8,7 +8,7 @@ import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
 import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.Map;
 
 @Service
 public class UserItineraryPersistenceService {
@@ -19,9 +19,9 @@ public class UserItineraryPersistenceService {
         this.itineraryRepository = itineraryRepository;
     }
 
-    public long saveItineraryRequest(String tripId, ItineraryRequest request) throws ItineraryPersitenceException {
+    public long saveItineraryRequest(Map<String, Object> userDetails, String tripId, ItineraryRequest request) throws ItineraryPersitenceException {
         try {
-            return itineraryRepository.saveItineraryRequest(tripId, request);
+            return itineraryRepository.saveItineraryRequest(userDetails, tripId, request);
         } catch (JsonProcessingException e) {
             throw new ItineraryPersitenceException(e);
         }

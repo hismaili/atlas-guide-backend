@@ -9,6 +9,7 @@ import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,7 +25,7 @@ public class LLMService {
     ItineraryPlan getItinerary(String systemPrompt, String userPrompt) {
         try {
             return chatClient.prompt()
-                    //.advisors(new SimpleLoggerAdvisor())
+                    .advisors(new SimpleLoggerAdvisor())
                     .system(systemPrompt)
                     .user(userPrompt)
                     .call()

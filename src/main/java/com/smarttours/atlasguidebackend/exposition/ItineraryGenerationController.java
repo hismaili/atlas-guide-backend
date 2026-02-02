@@ -8,10 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,9 +40,17 @@ public class ItineraryGenerationController {
     }
 
     @PostMapping(value = "/itinerary", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> generateVisitPlan(@Valid @RequestBody ItineraryRequest itineraryRequest) {
+    public ResponseEntity<Map<String, String>> generateVisitPlan(Principal principal, @Valid @RequestBody ItineraryRequest itineraryRequest) {
         // Log the request for debugging purposes
         LOG.info("Received itinerary request: {}", itineraryRequest);
+
+        JwtAuthenticationToken jwtAuthToken = (JwtAuthenticationToken) principal;
+        Map<String, Object> userDetails = new HashMap<>(jwtAuthToken.getToken().getClaims());
+        userDetails.put("ip", jwtAuthToken.getDetails() instanceof WebAuthenticationDetails webDetails ? webDetails.getRemoteAddress() : "unknown");
+
+        LOG.debug("Principal user : {}, {}, {}, {}, {}",
+                jwtAuthToken.getCredentials(), jwtAuthToken.getTokenAttributes(),
+                jwtAuthToken.getDetails(), jwtAuthToken.getName(), jwtAuthToken.getAuthorities());
         try {
             // Validate the request object
             if (itineraryRequest == null) {
@@ -47,7 +59,7 @@ public class ItineraryGenerationController {
 
             String tripId = UUID.randomUUID().toString();
             // Start the generation process in the background. We don't wait for it.
-            itineraryGenerationService.createItineraryAsync(tripId, itineraryRequest);
+            itineraryGenerationService.createItineraryAsync(userDetails, tripId, itineraryRequest);
 
             // Immediately return the tripId to the client
             return ResponseEntity.ok(Map.of("tripId", tripId));

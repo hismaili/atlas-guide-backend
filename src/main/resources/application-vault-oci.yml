@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    vault:
+      uri: https://vault.toursadvisor.ddnsgeek.com/
+      authentication: OCI
+      oci:
+        auth-type: instance
+        role: tours-backend-oci-role

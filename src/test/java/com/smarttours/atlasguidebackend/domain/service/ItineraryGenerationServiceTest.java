@@ -18,13 +18,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -134,7 +129,8 @@ public class ItineraryGenerationServiceTest {
         // --- Act ---
         try {
             String tripId = UUID.randomUUID().toString();
-            itineraryGenerationService.createItineraryAsync(tripId, validRequest);
+            Map<String, Object> userDetails = Map.of("preferred_username", "test-user", "email", "test-user@test.com", "ip", "0.0.0.0/16");
+            itineraryGenerationService.createItineraryAsync(userDetails, tripId, validRequest);
         } catch (Exception e) {
             fail("Unexpected exception during test setup: " + e.getMessage());
         }
@@ -160,7 +156,8 @@ public class ItineraryGenerationServiceTest {
         // We call the method, but we expect it to handle the exception internally.
         try {
             String tripId   = UUID.randomUUID().toString();
-            itineraryGenerationService.createItineraryAsync(tripId, validRequest);
+            Map<String, Object> userDetails = Map.of("preferred_username", "test-user", "email", "test-user@test.com", "ip", "0.0.0.0/16");
+            itineraryGenerationService.createItineraryAsync(userDetails, tripId, validRequest);
         } catch (Exception e) {
             fail("Unexpected exception during test setup: " + e.getMessage());
         }
@@ -181,7 +178,8 @@ public class ItineraryGenerationServiceTest {
         // --- Act ---
         try {
             String tripId  = UUID.randomUUID().toString();
-            itineraryGenerationService.createItineraryAsync(tripId, validRequest);
+            Map<String, Object> userDetails = Map.of("preferred_username", "test-user", "email", "test-user@test.com", "ip", "0.0.0.0/16");
+            itineraryGenerationService.createItineraryAsync(userDetails, tripId, validRequest);
         } catch (Exception e) {
             fail("Unexpected exception during test setup: " + e.getMessage());
         }

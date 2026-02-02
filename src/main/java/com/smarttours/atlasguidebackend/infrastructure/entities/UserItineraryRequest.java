@@ -2,12 +2,10 @@ package com.smarttours.atlasguidebackend.infrastructure.entities;
 
 import jakarta.persistence.*;
 
-import java.sql.Blob;
+import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
-import static jakarta.persistence.GenerationType.UUID;
 
 @Entity
 @Table(name = "user_itinerary_requests")
@@ -30,6 +28,22 @@ public class UserItineraryRequest {
     )
     private ItineraryPlanEntity itineraryPlanEntity;
 
+    @ManyToOne(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    @JoinColumn(name = "blongs_to_id")
+    private Owner blongsTo;
+
+    private LocalDateTime createdOn;
+
+    public Owner getBlongsTo() {
+        return blongsTo;
+    }
+
+    public void setBlongsTo(Owner blongsTo) {
+        this.blongsTo = blongsTo;
+    }
+
     // Constructors
     public UserItineraryRequest() {}
 
@@ -38,6 +52,7 @@ public class UserItineraryRequest {
         this.itineraryRequestJson = itineraryRequestJson;
         this.itineraryResponseJson = itineraryResponseJson;
         this.itineraryPlanEntity = itineraryPlanEntity;
+        this.createdOn = LocalDateTime.now();
     }
 
     // Getters and Setters
@@ -108,4 +123,9 @@ public class UserItineraryRequest {
     public int hashCode() {
         return Objects.hashCode(getUserItineraryRequestId());
     }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
 }

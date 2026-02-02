@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Repository
@@ -31,8 +32,8 @@ public class ConcreteItineraryRepository implements ItineraryRepository {
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public long saveItineraryRequest(String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException {
-        UserItineraryRequest userItineraryRequest = UserItineraryRequestMapper.toEntity(itineraryRequest, tripId);
+    public long saveItineraryRequest(Map<String, Object> userDetails, String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException {
+        UserItineraryRequest userItineraryRequest = UserItineraryRequestMapper.toEntity(userDetails, itineraryRequest, tripId);
         UserItineraryRequest savedItineraryRequest = userItineraryRequestJpaRepository.save(userItineraryRequest);
 
         return savedItineraryRequest.getUserItineraryRequestId();

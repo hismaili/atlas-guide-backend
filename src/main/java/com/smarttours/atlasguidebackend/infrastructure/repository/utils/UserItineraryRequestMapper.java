@@ -5,25 +5,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smarttours.atlasguidebackend.domain.exceptions.UncompleteItineraryException;
 import com.smarttours.atlasguidebackend.domain.user.input.*;
-import com.smarttours.atlasguidebackend.domain.user.output.DayPlan;
-import com.smarttours.atlasguidebackend.domain.user.output.Event;
-import com.smarttours.atlasguidebackend.domain.user.output.FicheDeVisite;
-import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
-import com.smarttours.atlasguidebackend.infrastructure.entities.DayPlanEntity;
-import com.smarttours.atlasguidebackend.infrastructure.entities.EventEntity;
-import com.smarttours.atlasguidebackend.infrastructure.entities.ItineraryPlanEntity;
-import com.smarttours.atlasguidebackend.infrastructure.entities.VisitCardEntity;
+import com.smarttours.atlasguidebackend.infrastructure.entities.Owner;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-
-import static com.smarttours.atlasguidebackend.infrastructure.entities.DayPlanEntity.*;
-import static java.util.stream.Collectors.toList;
+import java.util.Map;
 
 public class UserItineraryRequestMapper {
     
@@ -91,13 +79,20 @@ public class UserItineraryRequestMapper {
         return StringUtils.isEmpty(input) ? StringUtils.EMPTY : input;
     }
 
-    public static com.smarttours.atlasguidebackend.infrastructure.entities.UserItineraryRequest toEntity(ItineraryRequest itineraryInputRequest, String tripId) throws JsonProcessingException {
+    public static com.smarttours.atlasguidebackend.infrastructure.entities.UserItineraryRequest toEntity(Map<String, Object> userDetails, ItineraryRequest itineraryInputRequest, String tripId) throws JsonProcessingException {
         if (itineraryInputRequest == null) {
             return null;
         }
         com.smarttours.atlasguidebackend.infrastructure.entities.UserItineraryRequest  entity = new com.smarttours.atlasguidebackend.infrastructure.entities.UserItineraryRequest();
         entity.setItineraryRequestJson(objectMapper.writeValueAsString(itineraryInputRequest));
         entity.setTripId(tripId);
+        Owner owner = new Owner(
+                userDetails.get("preferred_username").toString(),
+                userDetails.get("email").toString(),
+                userDetails.get("ip").toString()
+        );
+
+        entity.setBlongsTo(owner);
         return entity;
     }
 }

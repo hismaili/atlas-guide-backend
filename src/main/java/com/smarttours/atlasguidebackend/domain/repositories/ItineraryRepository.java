@@ -6,11 +6,12 @@ import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
 import com.smarttours.atlasguidebackend.domain.user.output.ItineraryPlan;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface ItineraryRepository {
 
-    long saveItineraryRequest(String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException;
+    long saveItineraryRequest(Map<String, Object> userDetails, String tripId, ItineraryRequest itineraryRequest) throws JsonProcessingException;
 
     long saveItineraryResponse(long requestId, ItineraryPlan itineraryPlan) throws JsonProcessingException, UncompleteItineraryException;
 

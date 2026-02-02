@@ -14,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import static org.assertj.core.api.Fail.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,7 +66,8 @@ public class ItineraryGenearationServiceIT {
             itineraryRequest.setBudget(Budget.MODERATE);
 
             String tripId = "test-trip-id-123";
-            this.itineraryGenerationService.createItineraryAsync(tripId, itineraryRequest);
+            Map<String, Object> userDetails = Map.of("preferred_username", "test-user", "email", "test-user@test.com", "ip", "0.0.0.0/16");
+            this.itineraryGenerationService.createItineraryAsync(userDetails, tripId, itineraryRequest);
         } catch (JsonProcessingException e) {
             fail("Failed to parse itinerary JSON: " + e.getMessage());
         } catch(Exception e) {
