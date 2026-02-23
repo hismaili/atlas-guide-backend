@@ -8,6 +8,7 @@ target/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/jpa-buddy.xml
 .idea/**
 *.iws
 *.iml
@@ -51,3 +52,6 @@ build/
 
 ### Local files ###
 application-debug.yml
+
+### Infrastructure platform config file ###
+**/tours-advisor-platform/**/*.sh

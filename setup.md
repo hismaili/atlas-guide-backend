@@ -115,7 +115,7 @@ podman exec -it tours-advisor-db psql -U postgres -c "\l"
 3. Click "Create"
 4. Go to "Credentials" tab
 5. Click "Set password"
-    - **Password**: leyRXN+49ZR6LZAU73VW4+ABm3EAaN9G77w7Ef/siZI=
+    - **Password**: *******
     - **Temporary**: OFF
 6. Click "Save"
 
