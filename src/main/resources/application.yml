@@ -33,7 +33,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          audience: tours-advisor-mobile
+          audiences: tours-advisor-mobile
           issuer-uri: http://localhost:8080/realms/tours-advisor
 #          jwk-set-uri: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/certs
 #      client:
@@ -46,6 +46,16 @@ spring:
 #        provider:
 #          keycloak:
 #            issuer-uri: http://localhost:8080/realms/tours-advisor
+  cloud:
+    vault:
+      scheme: http
+      kv:
+        enabled: true
+      uri: ${VAULT_URI:http://localhost:8200}
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
 
 
 springdoc:

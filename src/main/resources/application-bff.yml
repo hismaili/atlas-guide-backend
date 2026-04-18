@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            # Values injected by Spring Cloud Vault at startup
+            client-id: ${keycloak.client-id}
+            client-secret: ${keycloak.client-secret}   # omit for public clients
+            scope: openid,profile,email,offline_access
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}
+            user-name-attribute: preferred_username
+
+# CORS: allow the web frontend origin (set via env var in Docker / CI)
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:8081}

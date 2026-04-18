@@ -3,6 +3,7 @@ package com.smarttours.atlasguidebackend.exposition.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,8 +22,6 @@ import java.util.List;
  * Integrates with Keycloak for OAuth2/JWT authentication
  */
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
 
     @Value("${app.security.dev-mode:false}")
@@ -69,6 +68,7 @@ public class SecurityConfig {
      * CORS configuration for React Native mobile app
      */
     @Bean
+    @Profile("!bff")
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 

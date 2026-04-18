@@ -8,7 +8,15 @@ path "kv-tours/data/backend/dev/*" {
   capabilities = ["read", "list"]
 }
 
+path "kv-tours/data/backend/local/*" {
+  capabilities = ["read", "list"]
+}
+
 # 3. Allow Spring to check engine version/metadata
 path "kv-tours/metadata/backend/dev/*" {
+  capabilities = ["read", "list"]
+}
+
+path "kv-tours/metadata/backend/local/*" {
   capabilities = ["read", "list"]
 }
