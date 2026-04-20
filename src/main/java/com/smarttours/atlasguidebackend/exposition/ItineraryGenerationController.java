@@ -3,18 +3,19 @@ package com.smarttours.atlasguidebackend.exposition;
 import com.smarttours.atlasguidebackend.domain.service.ItineraryGenerationService;
 import com.smarttours.atlasguidebackend.domain.service.SseService;
 import com.smarttours.atlasguidebackend.domain.user.input.ItineraryRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -40,17 +41,17 @@ public class ItineraryGenerationController {
     }
 
     @PostMapping(value = "/itinerary", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> generateVisitPlan(Principal principal, @Valid @RequestBody ItineraryRequest itineraryRequest) {
-        // Log the request for debugging purposes
+    public ResponseEntity<Map<String, String>> generateVisitPlan(
+            Authentication authentication,
+            @Valid @RequestBody ItineraryRequest itineraryRequest,
+            HttpServletRequest request) {
+
         LOG.info("Received itinerary request: {}", itineraryRequest);
 
-        JwtAuthenticationToken jwtAuthToken = (JwtAuthenticationToken) principal;
-        Map<String, Object> userDetails = new HashMap<>(jwtAuthToken.getToken().getClaims());
-        userDetails.put("ip", jwtAuthToken.getDetails() instanceof WebAuthenticationDetails webDetails ? webDetails.getRemoteAddress() : "unknown");
+        Map<String, Object> userDetails = extractUserDetails(authentication);
+        userDetails.put("ip", request.getRemoteAddr());
 
-        LOG.debug("Principal user : {}, {}, {}, {}, {}",
-                jwtAuthToken.getCredentials(), jwtAuthToken.getTokenAttributes(),
-                jwtAuthToken.getDetails(), jwtAuthToken.getName(), jwtAuthToken.getAuthorities());
+        LOG.debug("User: {}, authorities: {}", authentication.getName(), authentication.getAuthorities());
         try {
             // Validate the request object
             if (itineraryRequest == null) {
@@ -67,6 +68,22 @@ public class ItineraryGenerationController {
             LOG.error("Error building user itinerary plan: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to build user itinerary plan", e);
         }
+    }
+
+    /**
+     * Extracts user claims from both auth types:
+     * - JWT mode (mobile): claims come from the decoded access token
+     * - BFF mode (web): claims come from the OIDC userinfo / id_token attributes
+     * Both contain preferred_username, email, etc. from Keycloak.
+     */
+    private Map<String, Object> extractUserDetails(Authentication authentication) {
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            return new HashMap<>(jwtAuth.getToken().getClaims());
+        }
+        if (authentication instanceof OAuth2AuthenticationToken oauth2Auth) {
+            return new HashMap<>(oauth2Auth.getPrincipal().getAttributes());
+        }
+        throw new IllegalStateException("Unsupported authentication type: " + authentication.getClass().getName());
     }
 
     private String mockedResponse() {

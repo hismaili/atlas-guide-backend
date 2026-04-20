@@ -6,7 +6,7 @@ spring:
   virtual-thread:
     enabled: true
   config:
-    import: optional:vault://kv-tours/backend/${environment}/ai-config,optional:vault://kv-tours/backend/${environment}/database
+    import: optional:vault://kv-tours/backend/${environment}/ai-config,optional:vault://kv-tours/backend/${environment}/database,optional:vault://kv-tours/backend/${environment}/auth
   ai:
     chat:
       client:
@@ -33,7 +33,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          audiences: tours-advisor-mobile
+#          audiences: tours-advisor-mobile
+          audiences: account
           issuer-uri: http://localhost:8080/realms/tours-advisor
 #          jwk-set-uri: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/certs
 #      client:
@@ -63,7 +64,13 @@ springdoc:
     oauth-config:
       authorization-url: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/auth
       token-url: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/token
-      client-id: tours-advisor-mobile
+#      client-id: tours-advisor-mobile
+#      client-secret: KavZ0H3JkuvBa42bZsCqLWRDIwwmzD3W
+    oauth:
+      authorization-url: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/auth
+      token-url: http://localhost:8080/realms/tours-advisor/protocol/openid-connect/token
+      clientId: tours-advisor-mobile
+      clientSecret: KavZ0H3JkuvBa42bZsCqLWRDIwwmzD3W
 
 server:
   port: ${SERVER_PORT:8090}

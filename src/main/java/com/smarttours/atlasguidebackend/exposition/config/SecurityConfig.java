@@ -28,6 +28,7 @@ public class SecurityConfig {
     private boolean devMode;
 
     @Bean
+    @Profile("!bff")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             // CORS configuration

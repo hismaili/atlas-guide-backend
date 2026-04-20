@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Converter to extract roles from Keycloak JWT token
  */
-class KeycloakJwtAuthenticationConverter implements org.springframework.core.convert.converter.Converter<
+public class KeycloakJwtAuthenticationConverter implements org.springframework.core.convert.converter.Converter<
         org.springframework.security.oauth2.jwt.Jwt, 
         org.springframework.security.authentication.AbstractAuthenticationToken> {
 

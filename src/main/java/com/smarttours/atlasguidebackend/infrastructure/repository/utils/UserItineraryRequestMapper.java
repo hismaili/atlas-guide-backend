@@ -75,6 +75,11 @@ public class UserItineraryRequestMapper {
         }
     }
 
+    private static String stringOrDefault(Map<String, Object> map, String key, String defaultValue) {
+        Object value = map.get(key);
+        return value != null ? value.toString() : defaultValue;
+    }
+
     private static String validString(String input) {
         return StringUtils.isEmpty(input) ? StringUtils.EMPTY : input;
     }
@@ -87,9 +92,9 @@ public class UserItineraryRequestMapper {
         entity.setItineraryRequestJson(objectMapper.writeValueAsString(itineraryInputRequest));
         entity.setTripId(tripId);
         Owner owner = new Owner(
-                userDetails.get("preferred_username").toString(),
-                userDetails.get("email").toString(),
-                userDetails.get("ip").toString()
+                stringOrDefault(userDetails, "preferred_username", "unknown"),
+                stringOrDefault(userDetails, "email", "unknown"),
+                stringOrDefault(userDetails, "ip", "unknown")
         );
 
         entity.setBlongsTo(owner);

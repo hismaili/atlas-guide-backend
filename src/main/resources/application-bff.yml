@@ -1,20 +1,38 @@
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: lax
+        http-only: true
+        # localhost:8081 and localhost:8090 are different ORIGINS (port differs)
+        # but the same SITE (registrable domain = localhost).
+        #
+        # SameSite=Lax cookies are sent on ALL same-site requests (including
+        # cross-origin fetch with credentials:'include' between different ports).
+        # The Lax restriction only blocks cross-SITE requests (e.g. evil.com -> localhost).
+        #
+        # This means fetch("http://localhost:8090/auth/user", { credentials:'include' })
+        # from http://localhost:8081 WILL send the JSESSIONID cookie — no need for
+        # SameSite=None (which would require Secure + HTTPS).
+        #
+        # For production on different domains, switch to SameSite=None + Secure,
+        # or proxy the frontend through the same origin.
+
 spring:
   security:
     oauth2:
       client:
         registration:
           keycloak:
-            # Values injected by Spring Cloud Vault at startup
-            client-id: ${keycloak.client-id}
-            client-secret: ${keycloak.client-secret}   # omit for public clients
-            scope: openid,profile,email,offline_access
+            client-id: ${keycloak.client-id:tours-advisor-bff}
+            client-secret: ${keycloak.client-secret}
+            scope: openid,profile,email
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
         provider:
           keycloak:
-            issuer-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}
+            issuer-uri: ${KEYCLOAK_URL:http://localhost:8080}/realms/${KEYCLOAK_REALM:tours-advisor}
             user-name-attribute: preferred_username
 
-# CORS: allow the web frontend origin (set via env var in Docker / CI)
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:8081}
