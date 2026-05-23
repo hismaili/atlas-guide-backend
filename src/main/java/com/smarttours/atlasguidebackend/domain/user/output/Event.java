@@ -8,16 +8,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Event {
 
-    @JsonProperty("type")
+    @JsonProperty(value = "type", required = true)
     private String type;
 
-    @JsonProperty("start_time")
+    @JsonProperty(value = "start_time", required = true)
     private String startTime;
 
-    @JsonProperty("end_time")
+    @JsonProperty(value = "end_time", required = true)
     private String endTime;
 
-    @JsonProperty("fiche_de_visite")
+    @JsonProperty(value = "fiche_de_visite", required = true)
     private FicheDeVisite ficheDeVisite;
 
     // Constructors

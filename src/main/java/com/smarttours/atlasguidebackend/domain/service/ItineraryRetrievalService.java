@@ -22,4 +22,16 @@ public class ItineraryRetrievalService {
     public List<ItineraryPlan> retrieveAllItineraries() {
         return itineraryRepository.getAllItineraries();
     }
+
+    public List<ItineraryPlan> retrieveItinerariesByOwnerName(String ownerName) {
+        return itineraryRepository.getItinerariesByOwnerName(ownerName);
+    }
+
+    public boolean deleteByTripId(String tripId) {
+        return itineraryRepository.deleteByTripId(tripId);
+    }
+
+    public ItineraryPlan updateTripTitle(String tripId, String title) {
+        return itineraryRepository.updateTripTitle(tripId, title);
+    }
 }

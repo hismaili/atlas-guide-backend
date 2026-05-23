@@ -17,10 +17,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ItineraryPlan {
 
     private static final Logger LOG = LoggerFactory.getLogger(ItineraryPlan.class);
-    @JsonProperty("trip_summary")
+
+    @JsonProperty(value = "trip_id")
+    private String tripId;
+
+    @JsonProperty(value = "trip_title")
+    private String tripTitle;
+
+    @JsonProperty(value = "destination")
+    private String destination;
+
+    @JsonProperty(value = "start_date")
+    private String startDate;
+
+    @JsonProperty(value = "trip_duration")
+    private int tripDuration;
+
+    @JsonProperty(value = "is_saved")
+    private boolean isSaved;
+
+    @JsonProperty(value = "trip_summary", required = true)
     private String tripSummary;
 
-    @JsonProperty("itinerary")
+    @JsonProperty(required = true, value = "itinerary")
     private List<DayPlan> itinerary;
 
     // Constructors
@@ -32,6 +51,24 @@ public class ItineraryPlan {
     }
 
     // Getters and Setters
+    public String getTripId() { return tripId; }
+    public void setTripId(String tripId) { this.tripId = tripId; }
+
+    public String getTripTitle() { return tripTitle; }
+    public void setTripTitle(String tripTitle) { this.tripTitle = tripTitle; }
+
+    public String getDestination() { return destination; }
+    public void setDestination(String destination) { this.destination = destination; }
+
+    public String getStartDate() { return startDate; }
+    public void setStartDate(String startDate) { this.startDate = startDate; }
+
+    public int getTripDuration() { return tripDuration; }
+    public void setTripDuration(int tripDuration) { this.tripDuration = tripDuration; }
+
+    public boolean isSaved() { return isSaved; }
+    public void setSaved(boolean saved) { isSaved = saved; }
+
     public String getTripSummary() {
         return tripSummary;
     }

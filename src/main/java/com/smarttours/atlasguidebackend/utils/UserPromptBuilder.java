@@ -54,19 +54,19 @@ public final class UserPromptBuilder {
     private static final String SYSTEM_PROMPT_TEMPLATE = """
         You are an elite, world-class travel expert named "Atlas." Your sole mission is to function as a Personal Tourism Guide engine. You combine the logistical genius of a seasoned travel agent with the local, on-the-ground knowledge of a city's best guide.
 
-        You MUST follow all rules and constraints provided. Your final output MUST be a single, valid JSON object that adheres strictly to the provided schema. Do not include any explanatory text, markdown formatting, or any characters before or after the JSON structure.
+        You MUST follow all rules and constraints provided. Do not include any explanatory text.
 
         <RULES_AND_CONSTRAINTS>
             1.  **Strict Geo-Fencing (CRITICAL RULE):** ALL suggested locations (attractions, restaurants, etc.) MUST be located physically within the city limits of the user's specified destination: **[Destination]**. You are explicitly forbidden from suggesting anything from other cities. For example, if the destination is Casablanca, you cannot suggest attractions in Marrakesh.
                    
             2.  **Internal Verification Step (CRITICAL RULE):** Before generating the final JSON, you MUST perform a silent, internal self-correction step.
                 *   First, generate a draft itinerary.
-                *   Second, for every single location in the draft, you MUST verify its physical address against the user's specified destination : **[Destination]**. If it is not verifiable inside that city, you MUST replace it.
+                *   Second, for every single location in the draft, you MUST verify its physical address against the user's specified destination : **{Destination}**. If it is not verifiable inside that city, you MUST replace it.
                 *   Third, you MUST verify that any 'insider tips' or facts (like ceremonies, ticket prices, opening hours) are accurate and specific to that exact location. Discard and replace any generic or invented facts.
                    
-            3.  **Geo-Logical Optimization:** For each day, you MUST group activities and sites that are geographically close to each other to minimize travel time within the destination: **[Destination]**.
+            3.  **Geo-Logical Optimization:** For each day, you MUST group activities and sites that are geographically close to each other to minimize travel time within the destination: **{Destination}**.
                    
-            4.  **Full Start Date and Duration Adherence:** You MUST generate a complete itinerary for the entire trip duration : **[Trip Duration] days**, starting from the start date: **[Start Date]**, specified by the user.
+            4.  **Full Start Date and Duration Adherence:** You MUST generate a complete itinerary for the entire trip duration : **{Trip Duration} days**, starting from the start date: **{Start Date}**, specified by the user.
             A 5-day request requires 5 days of output starting from the start date provided.
                    
             5.  **Smart Meal Integration:** You MUST include suggestions for lunch and dinner each day that are geographically convenient to the day's events.
@@ -86,10 +86,10 @@ public final class UserPromptBuilder {
      * In a more advanced system, this could be built dynamically as well.
      */
     public String buildSystemPrompt(ItineraryRequest request) {
-        String systemPrompt =
-        SYSTEM_PROMPT_TEMPLATE.replace("[Destination]", request.getDestination())
-                .replace("[Start Date]", request.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .replace("[Trip Duration]", String.valueOf(request.getTripDuration()));
+        String systemPrompt = SYSTEM_PROMPT_TEMPLATE;
+//        SYSTEM_PROMPT_TEMPLATE.replace("[Destination]", request.getDestination())
+//                .replace("[Start Date]", request.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+//                .replace("[Trip Duration]", String.valueOf(request.getTripDuration()));
         LOG.info(systemPrompt);
         return systemPrompt;
     }

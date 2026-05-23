@@ -20,4 +20,10 @@ public interface ItineraryRepository {
     List<ItineraryPlan> getAllItineraries();
 
     ItineraryPlan getItineraryByTripId(String tripId);
+
+    boolean deleteByTripId(String tripId);
+
+    ItineraryPlan updateTripTitle(String tripId, String title);
+
+    List<ItineraryPlan> getItinerariesByOwnerName(String ownerName);
 }

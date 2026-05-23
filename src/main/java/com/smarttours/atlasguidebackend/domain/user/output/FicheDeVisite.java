@@ -10,35 +10,36 @@ import java.util.Arrays;
  */
 public class FicheDeVisite {
 
-    @JsonProperty("name")
+    @JsonProperty(value = "name", required = true)
     private String name;
 
-    @JsonProperty("category")
+    @JsonProperty(value = "category", required = true)
     private String category;
 
-    @JsonProperty("description")
+    @JsonProperty(value = "description", required = true)
     private String description;
 
-    @JsonProperty("address")
+    @JsonProperty(value = "address", required = true)
     private String address;
 
-    @JsonProperty("opening_hours")
+    @JsonProperty(value = "opening_hours", required = true)
     private String openingHours;
 
-    @JsonProperty("estimated_duration_minutes")
+    @JsonProperty(value = "estimated_duration_minutes", required = true)
     private int estimatedDurationMinutes;
 
-    @JsonProperty("ticket_info")
+    @JsonProperty(value = "ticket_info", required = true)
     private String ticketInfo;
 
-    @JsonProperty("why_its_for_you")
+    @JsonProperty(value = "why_its_for_you", required = true)
     private String whyItsForYou;
 
-    @JsonProperty("insider_tip")
+    @JsonProperty(value = "insider_tip", required = true)
     private String insiderTip;
 
-    @JsonProperty("logistics")
+    @JsonProperty(value = "logistics", required = true)
     private String logistics;
+
 
     private String securityDescription;
 

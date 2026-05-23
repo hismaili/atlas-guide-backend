@@ -11,19 +11,19 @@ import java.util.List;
  */
 public class DayPlan {
 
-    @JsonProperty("day")
+    @JsonProperty(value = "day", required = true)
     private int day;
 
-    @JsonProperty("date")
+    @JsonProperty(value = "date", required = true)
     private String date;
 
-    @JsonProperty("day_title")
+    @JsonProperty(value = "day_title", required = true)
     private String dayTitle;
 
-    @JsonProperty("daily_summary")
+    @JsonProperty(value = "daily_summary", required = true)
     private String dailySummary;
 
-    @JsonProperty("events")
+    @JsonProperty(value = "events", required = true)
     private List<Event> events;
 
     // Constructors

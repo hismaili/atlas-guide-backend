@@ -31,9 +31,15 @@ public class ItineraryPlanMapper {
         return objectMapper.writeValueAsString(itineraryPlan);
     }
 
-    public static ItineraryPlanEntity itineraryPlanToEntity(ItineraryPlan itineraryPlan) throws UncompleteItineraryException {
+    public static ItineraryPlanEntity itineraryPlanToEntity(ItineraryPlan itineraryPlan, String tripId,
+                                                               String destination, String startDate, int tripDuration) throws UncompleteItineraryException {
         ItineraryPlanEntity entity = new ItineraryPlanEntity();
         BeanUtils.copyProperties(itineraryPlan, entity);
+        entity.setTripId(tripId);
+        entity.setDestination(destination);
+        entity.setStartDate(startDate);
+        entity.setTripDuration(tripDuration);
+        entity.setTripTitle("Trip to " + destination);
 
         List<DayPlanEntity> dayPlanEntities = validateAndGetItinerary(itineraryPlan, entity);
         entity.setDayPlans(dayPlanEntities);
@@ -93,6 +99,12 @@ public class ItineraryPlanMapper {
             return null;
         }
         ItineraryPlan itineraryPlan = new ItineraryPlan();
+        itineraryPlan.setTripId(itineraryPlanEntity.getTripId());
+        itineraryPlan.setTripTitle(itineraryPlanEntity.getTripTitle());
+        itineraryPlan.setDestination(itineraryPlanEntity.getDestination());
+        itineraryPlan.setStartDate(itineraryPlanEntity.getStartDate());
+        itineraryPlan.setTripDuration(itineraryPlanEntity.getTripDuration());
+        itineraryPlan.setSaved(true);
         itineraryPlan.setTripSummary(itineraryPlanEntity.getTripSummary());
         if (!CollectionUtils.isEmpty(itineraryPlanEntity.getDayPlans())) {
             List<DayPlan> dayPlans = itineraryPlanEntity.getDayPlans().stream().map(dayPlanEntity -> {
