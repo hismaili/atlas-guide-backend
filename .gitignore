@@ -51,6 +51,9 @@ build/
 */app/.env
 *.env
 
+### clude directory
+.claude
+
 ### Local files ###
 application-debug.yml
 
